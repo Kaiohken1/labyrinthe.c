@@ -3,8 +3,7 @@
 
 #include "structs.h"
 
-App *initSDL();
-void SDL_ExitWithError(const char *message,App *app);
-void SDL_Exit(App *app);
+void initSDL(void);
+void SDL_ExitWithError(const char *message, App *app);
 
 #endif
