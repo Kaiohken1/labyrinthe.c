@@ -3,8 +3,9 @@
 #define __STRUCTS__
 
 typedef struct {
-    SDL_Renderer  *renderer;
-    SDL_Window  *window;
+    SDL_Renderer *renderer;
+    SDL_Window *window;
+    SDL_bool programLaunched;
 } App;
 
 #endif

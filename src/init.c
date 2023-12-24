@@ -1,13 +1,12 @@
 #include <stdio.h>
-#include <SDL.h>
 #include "init.h"
 #include "def.h"
 
-void initSDL(void) {
+App *initSDL() {
     App *app = malloc(sizeof(App));
 
     if (app == NULL) {
-    fprintf(stderr, "Erreur : Allocation de mémoire pour Maze a échoué.\n");
+    fprintf(stderr, "Erreur : Allocation de mémoire pour l'app a echoue.\n");
     exit(EXIT_FAILURE);
     }
 
@@ -16,50 +15,25 @@ void initSDL(void) {
 
     if(SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &app->window, &app->renderer) != 0)
         SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app);
-
-     SDL_bool programLaunched = SDL_TRUE;
-
-    while (programLaunched) {
-        SDL_Event event;
-
-        while(SDL_PollEvent(&event)) {
-            switch(event.type) {
-                case SDL_KEYDOWN:
-                    switch(event.key.keysym.sym) {
-                        case SDLK_b:
-                            printf("Vous avez appuye sur B\n");
-                            continue;
-
-                        default:
-                            continue;
-                    }
-
-                case SDL_KEYUP:
-                    switch(event.key.keysym.sym) {
-                        case SDLK_b:
-                            printf("Vous avez relache sur B\n");
-                            continue;
-
-                        default:
-                            continue;;
-                    }
-                case SDL_QUIT:
-                    programLaunched = SDL_FALSE;
-                break;
-
-                default:
-                break;
-            }
-        }
-    }
     
-    
-    SDL_DestroyRenderer(app->renderer);
-    SDL_DestroyWindow(app->window);
-    SDL_Quit();
-    free(app);
-    exit(EXIT_SUCCESS);   
+
+        
+    return app;
 }
+
+void SDL_Exit(App *app) {
+    if (app != NULL) {
+        if (app->renderer != NULL) {
+            SDL_DestroyRenderer(app->renderer);
+        }
+        if (app->window != NULL) {
+            SDL_DestroyWindow(app->window);
+        }
+        free(app);
+    }
+    SDL_Quit();
+}
+
 
 void SDL_ExitWithError(const char *message, App *app) {
     if (app != NULL) {
