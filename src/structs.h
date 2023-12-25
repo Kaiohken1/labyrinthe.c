@@ -8,4 +8,10 @@ typedef struct {
     SDL_bool programLaunched;
 } App;
 
+typedef struct {
+    int x;
+    int y;
+    SDL_Texture *texture;
+} Entity;
+
 #endif
