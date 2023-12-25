@@ -4,7 +4,7 @@
 #include "draw.h"
 /*
 Compilation du programme :
-gcc src/main.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2
+gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2
 bin\prog.exe
 */
 
