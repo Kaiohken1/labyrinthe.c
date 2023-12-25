@@ -4,7 +4,7 @@
 #include "draw.h"
 /*
 Compilation du programme :
-gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2
+gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
 bin\prog.exe
 */
 
@@ -16,25 +16,12 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    Entity *player = malloc(sizeof(Entity));
-
-    if (player == NULL) {
-        SDL_ExitWithError("Impossible de charger le joueur", app);
-        return EXIT_FAILURE;
-    }
-
-    player->x = 300;
-    player->y = 50;
-    player->texture = loadTexture("img/full.png", app);
-
     while(app->programLaunched) {
         prepareScene(app);
         inputEvent(app);
-        showTexture(player->texture, player->x, player->y, app);
         presentScene(app);
     }
 
-    free(player);
     SDL_Exit(app);
 
     exit(EXIT_SUCCESS);
