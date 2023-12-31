@@ -22,7 +22,7 @@ App *initSDL() {
     return app;
 }
 
-void SDL_Exit(App *app) {
+void SDL_Exit(App *app, Maze * maze) {
     if (app != NULL) {
         if (app->renderer != NULL) {
             SDL_DestroyRenderer(app->renderer);
@@ -34,6 +34,7 @@ void SDL_Exit(App *app) {
         }
         free(app);
     }
+    free(maze);
     IMG_Quit();
     SDL_Quit();
 }

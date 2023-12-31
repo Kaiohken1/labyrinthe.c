@@ -14,4 +14,28 @@ typedef struct {
     SDL_Texture *texture;
 } Entity;
 
+typedef enum {
+    FALSE,
+    TRUE
+} Bool;
+
+typedef struct {
+    int x, y;           
+    Bool isWall;   
+} Cell;
+
+
+typedef struct {
+    int width;
+    int height;
+    Cell *tab;
+} Maze;
+
+typedef struct {
+    Cell *cells;
+    int top;
+    int capacity;
+} Stack;
+
+
 #endif

@@ -2,6 +2,9 @@
 #include "init.h"
 #include "input.h"
 #include "draw.h"
+#include "maze.h"
+#include "def.h"
+#include <time.h>
 /*
 Compilation du programme :
 gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
@@ -11,31 +14,21 @@ bin\prog.exe
 
 int main(int argc, char **argv) {
     App *app = initSDL();
+    Maze *maze = malloc(sizeof(Maze));
 
-    if (app == NULL) {
-        return EXIT_FAILURE;
+    if (app == NULL || maze == NULL) {
+        SDL_ExitWithError("Allocation de mémoire initiale a échouée", app);
     }
 
-    Entity *player = malloc(sizeof(Entity));
-
-    if (player == NULL) {
-        SDL_ExitWithError("Impossible de charger le joueur", app);
-        return EXIT_FAILURE;
-    }
-
-    player->x = 300;
-    player->y = 50;
-    player->texture = loadTexture("img/full.png", app);
+    srand(time(NULL));
+    generateMaze(maze);
+    renderMaze(app->renderer, maze);
 
     while(app->programLaunched) {
-        prepareScene(app);
-        inputEvent(app);
-        showTexture(player->texture, player->x, player->y, app);
-        presentScene(app);
+        inputEvent(app);        
     }
 
-    free(player);
-    SDL_Exit(app);
+    SDL_Exit(app, maze);
 
     exit(EXIT_SUCCESS);
 }

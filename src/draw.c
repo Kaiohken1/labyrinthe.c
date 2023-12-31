@@ -1,10 +1,11 @@
 #include "structs.h"
-#include"draw.h"
+#include "draw.h"
 #include "init.h"
 #include <SDL_image.h>
+#include "maze.h"
 
 void prepareScene(App *app) {
-	SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 3);
+	SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 0);
 	SDL_RenderClear(app->renderer);
 }
 
@@ -14,8 +15,6 @@ void presentScene(App *app) {
 
 SDL_Texture *loadTexture(char *filename, App *app) {
 	SDL_Texture *texture;
-
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
 
 	texture = IMG_LoadTexture(app->renderer, filename);
 

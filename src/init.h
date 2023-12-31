@@ -5,6 +5,6 @@
 
 App *initSDL();
 void SDL_ExitWithError(const char *message,App *app);
-void SDL_Exit(App *app);
+void SDL_Exit(App *app, Maze *maze);
 
 #endif
