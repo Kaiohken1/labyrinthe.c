@@ -15,12 +15,16 @@ bin\prog.exe
 int main(int argc, char **argv) {
     App *app = initSDL();
     Maze *maze = malloc(sizeof(Maze));
+    Entity *player = malloc(sizeof(Entity));
 
-    if (player == NULL) {
-        SDL_ExitWithError("Impossible de charger le joueur", app);
-        return EXIT_FAILURE;
+    if (app == NULL || maze == NULL || player == NULL) {
+        SDL_ExitWithError("Allocation de mémoire initiale a échouée", app);
     }
 
+    srand(time(NULL)); 
+    generateMaze(maze);
+    renderMaze(app->renderer, maze, app);
+    
     player->texture = loadTexture("img/full.png", app);
     player->x = 100;
     player->y = 100;
@@ -35,6 +39,7 @@ int main(int argc, char **argv) {
         showTexture(player->texture, player->x, player->y, 40, 40, app);
         presentScene(app);
         doInput(app);
+        
 
         // variables prevX et prevY pour conserver la position précédente
         prevX = player->x;

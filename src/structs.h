@@ -41,9 +41,4 @@ typedef struct {
     int capacity;
 } Stack;
 
-
-
-
-
-
 #endif
