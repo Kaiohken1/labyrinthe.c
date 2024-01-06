@@ -1,6 +1,7 @@
 #include "maze.h"
 #include "def.h"
 #include "init.h"
+#include "draw.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -35,8 +36,8 @@ Bool canDelete(Maze *maze, Cell *cell, int dx, int dy) {
     targetCell.x = targetX;
     targetCell.y = targetY;
 
-    if (targetX < 1 || targetX >= maze->width - 1 || targetY < 1 || targetY >= maze->height - 1) {
-        return FALSE;
+    if (targetX < 1 || targetX >= maze->width - 1|| targetY < 1 || targetY >= maze->height - 1) {
+    return FALSE;
     }
 
     int checkX[6], checkY[6];
@@ -102,6 +103,29 @@ void moveCursor(Cell *cursor, int dx, int dy) {
     cursor->y += dy;
 }
 
+// void createEntry(Maze *maze) {
+//     int topY = 0;
+
+//     for (int topX = 0; topX < 2; topX++) {
+//         if (topX >= 0 && topY >= 0 && topX < maze->width && topY < maze->height) {
+//             int index = topY * maze->width + topX;
+//             maze->tab[index].isWall = FALSE;
+//         }
+//     }
+// }
+
+
+void createExit(Maze *maze) {
+    int botY = maze->height - 2;
+
+    for (int botX = maze->width - 1; botX >= maze->width - 2; botX--) {
+        if (botX >= 0 && botY >= 0 && botX < maze->width && botY < maze->height) {
+            int index = botY * maze->width + botX;
+            maze->tab[index].isWall = FALSE;
+        }
+    }
+}
+
 void generateMaze(Maze *maze) {
     createGrid(maze);
     Cell cursor = {1, 1};
@@ -145,9 +169,9 @@ void generateMaze(Maze *maze) {
             moveCursor(&cursor, dx, dy);
         } else {
             if (isStackEmpty(&stack)) {
+                createExit(maze);
                 break; 
             } else {
-
                 Cell lastPosition;
                 if (pop(&stack, &lastPosition)) {
                     cursor = lastPosition; 
@@ -197,34 +221,38 @@ void freeStack(Stack *stack) {
 }
 
 
-void renderMaze(SDL_Renderer *renderer, Maze *maze) {
+void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
     if (renderer == NULL || maze == NULL || maze->tab == NULL) {
-        fprintf(stderr, "Erreur : pointeur nul ou tableau non initialisé.\n");
+        fprintf(stderr, "Erreur : pointeur non initialisé.\n");
         return;
     }
 
+    int centerX = (SCREEN_WIDTH / 2) - (maze->width * CELL_SIZE) / 2;
+    int centerY = (SCREEN_HEIGHT / 2) - (maze->height * CELL_SIZE) / 2;
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
+    SDL_Texture *texture = loadTexture("img/stone.jpg", app);
 
     for (int y = 0; y < maze->height; y++) {
         for (int x = 0; x < maze->width; x++) {
             int index = y * maze->width + x;
             if (maze->tab[index].isWall) {
                 SDL_Rect wallRect;
-                wallRect.x = maze->tab[index].x * CELL_SIZE;
-                wallRect.y = maze->tab[index].y * CELL_SIZE;
+                wallRect.x = centerX + maze->tab[index].x * CELL_SIZE;
+                wallRect.y = centerY + maze->tab[index].y * CELL_SIZE;
                 wallRect.w = CELL_SIZE;
                 wallRect.h = CELL_SIZE;
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderFillRect(renderer, &wallRect);
+                if (SDL_RenderCopy(renderer, texture, NULL, &wallRect) != 0)
+                    SDL_ExitWithError("Impossible d'afficher la texture", app);
             } else {
                 SDL_Rect passageRect;
-                passageRect.x = maze->tab[index].x * CELL_SIZE;
-                passageRect.y = maze->tab[index].y * CELL_SIZE;
+                passageRect.x = centerX + maze->tab[index].x * CELL_SIZE;
+                passageRect.y = centerY + maze->tab[index].y * CELL_SIZE;
                 passageRect.w = CELL_SIZE;
                 passageRect.h = CELL_SIZE;
 
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderFillRect(renderer, &passageRect);
             }
         }

@@ -4,9 +4,9 @@
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 
-#define MAZE_WIDTH 50
-#define MAZE_HEIGHT 30
-#define CELL_SIZE 20
+#define MAZE_WIDTH 35
+#define MAZE_HEIGHT 20
+#define CELL_SIZE 35
 
 #define N 0, -1
 #define S 0, 1

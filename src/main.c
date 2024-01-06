@@ -20,9 +20,9 @@ int main(int argc, char **argv) {
         SDL_ExitWithError("Allocation de mémoire initiale a échouée", app);
     }
 
-    srand(time(NULL));
+    srand(time(NULL)); 
     generateMaze(maze);
-    renderMaze(app->renderer, maze);
+    renderMaze(app->renderer, maze, app);
 
     while(app->programLaunched) {
         inputEvent(app);        
