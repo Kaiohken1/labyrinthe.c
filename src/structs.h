@@ -6,6 +6,10 @@ typedef struct {
     SDL_Renderer *renderer;
     SDL_Window *window;
     SDL_bool programLaunched;
+    int up;
+	int down;
+	int left;
+	int right;
 } App;
 
 typedef struct {
@@ -13,5 +17,9 @@ typedef struct {
     int y;
     SDL_Texture *texture;
 } Entity;
+
+
+
+
 
 #endif

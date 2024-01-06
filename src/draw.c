@@ -25,14 +25,27 @@ SDL_Texture *loadTexture(char *filename, App *app) {
 	return texture;
 }
 
-void showTexture(SDL_Texture *texture, int x, int y, App *app) {
-	SDL_Rect dest;
+void showTexture(SDL_Texture *texture, int x, int y, int largeurTexture, int hauteurTexture, App *app) {
+    SDL_Rect dest;
 
-	dest.x = x;
-	dest.y = y;
-	if(SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h) !=0)
-		SDL_ExitWithError("Impossible de charger la texture", app);
+    dest.x = x;
+    dest.y = y;
+    dest.w = largeurTexture; 
+    dest.h = hauteurTexture; 
 
-	if(SDL_RenderCopy(app->renderer, texture, NULL, &dest) !=0)
-		SDL_ExitWithError("Impossible d'afficher la texture", app);
+    if(SDL_RenderCopy(app->renderer, texture, NULL, &dest) != 0)
+        SDL_ExitWithError("Impossible d'afficher la texture", app);
 }
+
+void blit(SDL_Texture *texture, int x, int y, App *app) {
+    SDL_Rect dest;
+    dest.x = x;
+    dest.y = y;
+
+    // Obtenir la largeur et la hauteur de la texture pour les mettre dans dest.w et dest.h
+    SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+
+    // Affichage de la texture aux coordonnées spécifiées
+    SDL_RenderCopy(app->renderer, texture, NULL, &dest);
+}
+
