@@ -9,7 +9,7 @@
 
 #define MAZE_WIDTH 35
 #define MAZE_HEIGHT 20
-#define CELL_SIZE 35
+#define CELL_SIZE 30
 
 #endif
 

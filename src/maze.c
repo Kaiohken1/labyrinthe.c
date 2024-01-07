@@ -232,6 +232,7 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
+
     SDL_Texture *texture = loadTexture("img/stone.jpg", app);
 
     for (int y = 0; y < maze->height; y++) {
@@ -243,8 +244,8 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
                 wallRect.y = centerY + maze->tab[index].y * CELL_SIZE;
                 wallRect.w = CELL_SIZE;
                 wallRect.h = CELL_SIZE;
-                if (SDL_RenderCopy(renderer, texture, NULL, &wallRect) != 0)
-                    SDL_ExitWithError("Impossible d'afficher la texture", app);
+
+                showTexture(texture, wallRect.x, wallRect.y, wallRect.w, wallRect.h, app);
             } else {
                 SDL_Rect passageRect;
                 passageRect.x = centerX + maze->tab[index].x * CELL_SIZE;
