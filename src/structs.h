@@ -32,7 +32,7 @@ typedef struct {
 typedef struct {
     int width;
     int height;
-    Cell *tab;
+    Cell **tab;
 } Maze;
 
 typedef struct {

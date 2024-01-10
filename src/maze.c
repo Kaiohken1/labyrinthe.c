@@ -9,19 +9,23 @@
 void createGrid(Maze *maze) {
     maze->width = MAZE_WIDTH;
     maze->height = MAZE_HEIGHT; 
-    maze->tab = malloc(maze->width * maze->height * sizeof(Cell));
+    maze->tab = malloc(maze->width * sizeof(Cell*));
 
     if (maze->tab == NULL) {
         fprintf(stderr, "Erreur d'allocation du tableau");
         exit(EXIT_FAILURE);
     }
 
-    for (int y = 0; y < maze->height; y++) {
-        for (int x = 0; x < maze->width; x++) {
-            int index = y * maze->width + x;
-            maze->tab[index].x = x;
-            maze->tab[index].y = y;
-            maze->tab[index].isWall = TRUE;
+    for (int x = 0; x < maze->width; x++) {
+        maze->tab[x] = malloc(maze->height * sizeof(Cell));
+        if(maze->tab[x] == NULL) {
+            fprintf(stderr, "Erreur d'allocation du tableau");
+            exit(EXIT_FAILURE);
+        }
+        for(int y = 0; y < maze->height; y++) {
+            maze->tab[x][y].x = x;
+            maze->tab[x][y].y = y;
+            maze->tab[x][y].isWall = TRUE;
         }
     }
 }
@@ -78,7 +82,7 @@ Bool canDelete(Maze *maze, Cell *cell, int dx, int dy) {
         }
 
         int index = checkY[i] * maze->width + checkX[i];
-        if (!maze->tab[index].isWall) {
+        if (!maze->tab[checkX[i]][checkY[i]].isWall) {
             return FALSE;
         }
     }
@@ -94,7 +98,7 @@ void deleteWall(Maze *maze, Cell *cell, int dx, int dy) {
     int newY = cell->y + dy;
     if (newX >= 0 && newY >= 0 && newX < maze->width && newY < maze->height) {
         int index = newY * maze->width + newX;
-        maze->tab[index].isWall = FALSE;
+        maze->tab[newX][newY].isWall = FALSE;
     }
 }
 
@@ -121,7 +125,7 @@ void createExit(Maze *maze) {
     for (int botX = maze->width - 1; botX >= maze->width - 2; botX--) {
         if (botX >= 0 && botY >= 0 && botX < maze->width && botY < maze->height) {
             int index = botY * maze->width + botX;
-            maze->tab[index].isWall = FALSE;
+            maze->tab[botX][botY].isWall = FALSE;
         }
     }
 }
@@ -181,7 +185,6 @@ void generateMaze(Maze *maze) {
     }
 
     freeStack(&stack);
-    free(maze->tab); 
 }
 
 
@@ -235,21 +238,20 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
 
     SDL_Texture *texture = loadTexture("img/stone.jpg", app);
 
-    for (int y = 0; y < maze->height; y++) {
-        for (int x = 0; x < maze->width; x++) {
-            int index = y * maze->width + x;
-            if (maze->tab[index].isWall) {
+    for (int x = 0; x < maze->width; x++) {
+        for (int y = 0; y < maze->height; y++) {
+            if (maze->tab[x][y].isWall) {
                 SDL_Rect wallRect;
-                wallRect.x = centerX + maze->tab[index].x * CELL_SIZE;
-                wallRect.y = centerY + maze->tab[index].y * CELL_SIZE;
+                wallRect.x = centerX + maze->tab[x][y].x * CELL_SIZE;
+                wallRect.y = centerY + maze->tab[x][y].y * CELL_SIZE;
                 wallRect.w = CELL_SIZE;
                 wallRect.h = CELL_SIZE;
 
                 showTexture(texture, wallRect.x, wallRect.y, wallRect.w, wallRect.h, app);
             } else {
                 SDL_Rect passageRect;
-                passageRect.x = centerX + maze->tab[index].x * CELL_SIZE;
-                passageRect.y = centerY + maze->tab[index].y * CELL_SIZE;
+                passageRect.x = centerX + maze->tab[x][y].x * CELL_SIZE;
+                passageRect.y = centerY + maze->tab[x][y].y * CELL_SIZE;
                 passageRect.w = CELL_SIZE;
                 passageRect.h = CELL_SIZE;
 
@@ -260,4 +262,17 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
     }
 
     SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(texture);
+}
+
+
+void freeGrid(Maze *maze) {
+    if(maze->tab != NULL) {
+        for(int x = 0; x< maze->width; x++) {
+            if(maze->tab[x] != NULL) {
+                free(maze->tab[x]);
+            }
+        }
+        free(maze->tab);
+    }
 }

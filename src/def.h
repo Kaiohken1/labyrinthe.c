@@ -7,9 +7,9 @@
 // int largeurOrigine = 100;
 // int hauteurOrigine = 100;
 
-#define MAZE_WIDTH 35
+#define MAZE_WIDTH 30
 #define MAZE_HEIGHT 20
-#define CELL_SIZE 30
+#define CELL_SIZE 35
 
 #endif
 

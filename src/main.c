@@ -73,9 +73,8 @@ int main(int argc, char **argv) {
         presentScene(app);
         doInput(app);
     }
-
+    freeGrid(maze);
     SDL_Exit(app, maze);
-
     return EXIT_SUCCESS;
 }
 

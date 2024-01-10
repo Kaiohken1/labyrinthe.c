@@ -16,4 +16,5 @@ void freeStack(Stack *stack);
 void renderMaze(SDL_Renderer *renderer, Maze *maze, App * app);
 void createEntry(Maze *maze);
 void createExit(Maze *maze);
+void freeGrid(Maze *maze);
 #endif
