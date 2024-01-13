@@ -8,8 +8,7 @@ App *initSDL() {
     App *app = malloc(sizeof(App));
 
     if (app == NULL) {
-    fprintf(stderr, "Erreur : Allocation de mémoire pour l'app a echoue.\n");
-    exit(EXIT_FAILURE);
+        SDL_ExitWithError("Erreur : Allocation de mémoire pour l'app a echoue.\n", NULL, NULL, NULL);
     }
 
     if(SDL_Init(SDL_INIT_VIDEO) !=0)
@@ -18,9 +17,19 @@ App *initSDL() {
     if(SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &app->window, &app->renderer) != 0)
         SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL);
 
-    IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+    int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
+    if ((IMG_Init(imgFlags) & imgFlags) != imgFlags)
+        SDL_ExitWithError("Erreur d'initialisation de SDL_image", app, NULL, NULL);
 
     return app;
+}
+
+void appInit(App *app) {
+    app->programLaunched = TRUE;
+    app->up = 0;
+    app->down = 0;
+    app->left = 0;
+    app->right = 0;
 }
 
 void SDL_Exit(App *app, Maze * maze, Entity *player) {

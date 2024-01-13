@@ -196,11 +196,19 @@ void initStack(Stack *stack, int capacity) {
 }
 
 Bool isStackEmpty(Stack *stack) {
-    return stack->top == -1;
+    if(stack->top == -1) {
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
 Bool isStackFull(Stack *stack) {
-    return stack->top == stack->capacity - 1;
+    if (stack->top == stack->capacity - 1) {
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
 void push(Stack *stack, Cell cell) {
@@ -237,6 +245,9 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
     SDL_RenderClear(renderer);
 
     SDL_Texture *texture = loadTexture("img/stone.jpg", app);
+    if(texture == NULL) {
+        SDL_ExitWithError("Impossible de charger la texture du labyrinthe", app, maze, NULL);
+    }
 
     for (int x = 0; x < maze->width; x++) {
         for (int y = 0; y < maze->height; y++) {

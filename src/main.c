@@ -21,11 +21,7 @@ int main(int argc, char **argv) {
         SDL_ExitWithError("Allocation de mémoire initiale a échouée", app, maze, player);
     }
 
-    app->programLaunched = TRUE;
-    app->up = 0;
-    app->down = 0;
-    app->left = 0;
-    app->right = 0;
+    appInit(app);
 
     srand(time(NULL)); 
     generateMaze(maze);
@@ -38,6 +34,9 @@ int main(int argc, char **argv) {
     int prevY = player->y;
 
     SDL_Texture *buffer = SDL_CreateTexture(app->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+    if(buffer == NULL) {
+        SDL_ExitWithError("Erreur lors de la création du buffer", app, maze, player);
+    }
 
     SDL_SetRenderTarget(app->renderer, buffer);
     renderMaze(app->renderer, maze, app);
@@ -79,8 +78,9 @@ int main(int argc, char **argv) {
         presentScene(app);
         doInput(app);
     }
-    freeGrid(maze);
+
     SDL_Exit(app, maze, player);
+
     return EXIT_SUCCESS;
 }
 
