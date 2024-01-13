@@ -18,8 +18,14 @@ int main(int argc, char **argv) {
     Entity *player = malloc(sizeof(Entity));
 
     if (app == NULL || maze == NULL || player == NULL) {
-        SDL_ExitWithError("Allocation de mémoire initiale a échouée", app);
+        SDL_ExitWithError("Allocation de mémoire initiale a échouée", app, maze, player);
     }
+
+    app->programLaunched = TRUE;
+    app->up = 0;
+    app->down = 0;
+    app->left = 0;
+    app->right = 0;
 
     srand(time(NULL)); 
     generateMaze(maze);
@@ -74,7 +80,7 @@ int main(int argc, char **argv) {
         doInput(app);
     }
     freeGrid(maze);
-    SDL_Exit(app, maze);
+    SDL_Exit(app, maze, player);
     return EXIT_SUCCESS;
 }
 

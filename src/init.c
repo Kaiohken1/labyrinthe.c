@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include "init.h"
 #include "def.h"
+#include "maze.h"
 
 App *initSDL() {
     App *app = malloc(sizeof(App));
@@ -12,17 +13,17 @@ App *initSDL() {
     }
 
     if(SDL_Init(SDL_INIT_VIDEO) !=0)
-        SDL_ExitWithError("Initialisation de SDL", app);
+        SDL_ExitWithError("Initialisation de SDL", app, NULL, NULL);
 
     if(SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &app->window, &app->renderer) != 0)
-        SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app);
+        SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL);
 
     IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 
     return app;
 }
 
-void SDL_Exit(App *app, Maze * maze) {
+void SDL_Exit(App *app, Maze * maze, Entity *player) {
     if (app != NULL) {
         if (app->renderer != NULL) {
             SDL_DestroyRenderer(app->renderer);
@@ -34,13 +35,22 @@ void SDL_Exit(App *app, Maze * maze) {
         }
         free(app);
     }
-    free(maze);
+
+    if (maze != NULL) {
+        freeGrid(maze);
+        free(maze);
+    }
+
+    if(player != NULL) {
+        free(player);
+    }
+
     IMG_Quit();
     SDL_Quit();
 }
 
 
-void SDL_ExitWithError(const char *message, App *app) {
+void SDL_ExitWithError(const char *message, App *app, Maze *maze, Entity *player) {
     if (app != NULL) {
         if (app->renderer != NULL) {
             SDL_DestroyRenderer(app->renderer);
@@ -52,6 +62,16 @@ void SDL_ExitWithError(const char *message, App *app) {
         }
         free(app);
     }
+
+    if (maze != NULL) {
+        freeGrid(maze);
+        free(maze);
+    }
+
+    if(player != NULL) {
+        free(player);
+    }
+
     IMG_Quit();
     SDL_Log("Error : %s > %s\n", message, SDL_GetError());
     SDL_Quit();

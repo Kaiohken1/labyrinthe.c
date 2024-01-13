@@ -19,7 +19,7 @@ SDL_Texture *loadTexture(char *filename, App *app) {
 	texture = IMG_LoadTexture(app->renderer, filename);
 
 	if(texture == NULL)
-		SDL_ExitWithError("Chargement de l'image échoué", app);
+		SDL_ExitWithError("Chargement de l'image échoué", app, NULL, NULL);
 
 	return texture;
 }
@@ -33,7 +33,7 @@ void showTexture(SDL_Texture *texture, int x, int y, int largeurTexture, int hau
     dest.h = hauteurTexture; 
 
     if(SDL_RenderCopy(app->renderer, texture, NULL, &dest) != 0)
-        SDL_ExitWithError("Impossible d'afficher la texture", app);
+        SDL_ExitWithError("Impossible d'afficher la texture", app, NULL, NULL);
 }
 
 void blit(SDL_Texture *texture, int x, int y, App *app) {
