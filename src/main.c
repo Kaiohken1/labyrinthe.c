@@ -11,6 +11,18 @@ gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ima
 bin\prog.exe
 */
 
+Bool checkCollision(Maze *maze, Entity *entity, int newX, int newY) {
+    int cellX = newX / CELL_SIZE;
+    int cellY = newY / CELL_SIZE;
+
+    if (cellX >= 0 && cellX < maze->width && cellY >= 0 && cellY < maze->height) {
+        if (maze->tab[cellX][cellY].isWall == TRUE) {
+            return TRUE; 
+        }
+    }
+
+    return FALSE; 
+}
 
 int main(int argc, char **argv) {
     App *app = initSDL();
@@ -18,7 +30,7 @@ int main(int argc, char **argv) {
     Entity *player = malloc(sizeof(Entity));
 
     if (app == NULL || maze == NULL || player == NULL) {
-        SDL_ExitWithError("Allocation de mémoire initiale a échouée", app, maze, player);
+        SDL_ExitWithError("Allocation de mémoire initiale a échoué", app, maze, player);
     }
 
     appInit(app);
@@ -26,8 +38,13 @@ int main(int argc, char **argv) {
     srand(time(NULL)); 
     generateMaze(maze);
     player->texture = loadTexture("img/full.png", app);
-    player->x = 100;
-    player->y = 100;
+
+    int characterSize = 25; 
+
+    int startX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+    int startY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+    player->x = startX;
+    player->y = startY;
 
     // Variables pour stocker la position précédente du joueur
     int prevX = player->x;
@@ -45,27 +62,25 @@ int main(int argc, char **argv) {
     while (app->programLaunched) {     
         inputEvent(app);
 
-        // variables prevX et prevY pour conserver la position précédente
-        prevX = player->x;
-        prevY = player->y;
+        // Copiez la position actuelle du joueur
+        int newX = player->x;
+        int newY = player->y;
 
         if (app->up && !app->down) {
-            player->y -= 1; // Déplacer d'une case vers le haut
+            newY -= CELL_SIZE; 
         } else if (app->down && !app->up) {
-            player->y += 1; // Déplacer d'une case vers le bas
+            newY += CELL_SIZE;
         }
 
         if (app->left && !app->right) {
-            player->x -= 1; // Déplacer d'une case vers la gauche
+            newX -= CELL_SIZE; 
         } else if (app->right && !app->left) {
-            player->x += 1; // Déplacer d'une case vers la droite
+            newX += CELL_SIZE;
         }
 
-        //on vérifie que le joueur ne dépasse pas les limites de l'écran
-        if (player->x < 0 || player->x > SCREEN_WIDTH - 100 || player->y < 0 || player->y > SCREEN_HEIGHT - 100) {
-            // on restaure sa position précédente
-            player->x = prevX;
-            player->y = prevY;
+        if (!checkCollision(maze, player, newX, newY)) {
+            player->x = newX;
+            player->y = newY;
         }
 
         SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
@@ -83,5 +98,6 @@ int main(int argc, char **argv) {
 
     return EXIT_SUCCESS;
 }
+
 
 
