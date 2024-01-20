@@ -6,7 +6,13 @@
 #include "def.h"
 #include "level.h"
 #include <time.h>
-#include <windows.h>
+
+/*
+Compilation du programme :
+gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+bin\prog.exe
+*/
+
 
 int main(int argc, char **argv) {
     App *app = initSDL();
@@ -80,8 +86,7 @@ int main(int argc, char **argv) {
                 player->y = newY;
             }
 
-            SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
-            SDL_RenderClear(app->renderer);
+            prepareScene(app);
 
             SDL_RenderCopy(app->renderer, buffer, NULL, NULL);
 
@@ -99,7 +104,6 @@ int main(int argc, char **argv) {
                 clock_t endClock = clock();
                 double elapsedTime = (double)(endClock - startClock) / CLOCKS_PER_SEC;
                 timeList = pushBackList(timeList, elapsedTime);
-                printf("%.2f secondes \n", elapsedTime);
                 level++; 
                 break;
             }
@@ -111,10 +115,18 @@ int main(int argc, char **argv) {
     }
 
     double total = getTotalTime(timeList);
-    printf("Temps total : %.2lf secondes\n", total);
+    char timeStr[100];
+
+    sprintf(timeStr,"Vous vous etes echappes en : %.2lf secondes", total);
+
+    drawText(app, timeStr); 
+
+    while (app->programLaunched) {
+        inputEvent(app);
+    }
+
 
     timeList = clearList(timeList);
-
     SDL_Exit(app, NULL, NULL);
 
     return EXIT_SUCCESS;

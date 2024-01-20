@@ -3,6 +3,7 @@
 #include "init.h"
 #include "def.h"
 #include "maze.h"
+#include <SDL_ttf.h>
 
 App *initSDL() {
     App *app = malloc(sizeof(App));
@@ -20,6 +21,10 @@ App *initSDL() {
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
     if ((IMG_Init(imgFlags) & imgFlags) != imgFlags)
         SDL_ExitWithError("Erreur d'initialisation de SDL_image", app, NULL, NULL);
+
+    if (TTF_Init() == -1)
+        SDL_ExitWithError("Erreur d'initilisation de SDL_TTF", app, NULL, NULL);
+
 
     return app;
 }
@@ -82,6 +87,7 @@ void SDL_ExitWithError(const char *message, App *app, Maze *maze, Entity *player
     }
 
     IMG_Quit();
+    TTF_Quit();
     SDL_Log("Error : %s > %s\n", message, SDL_GetError());
     SDL_Quit();
     exit(EXIT_FAILURE);

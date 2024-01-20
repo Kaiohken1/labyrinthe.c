@@ -2,10 +2,11 @@
 #include "draw.h"
 #include "init.h"
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include "maze.h"
 
 void prepareScene(App *app) {
-	SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(app->renderer);
 }
 
@@ -47,4 +48,23 @@ void blit(SDL_Texture *texture, int x, int y, App *app) {
     // Affichage de la texture aux coordonnées spécifiées
     SDL_RenderCopy(app->renderer, texture, NULL, &dest);
 }
+
+void drawText(App *app, const char *message) {
+    TTF_Font *font = TTF_OpenFont("font/slkscr.ttf", 24);
+    if (!font) {
+        SDL_ExitWithError("Erreur lors du chargement de la police", app, NULL, NULL);
+    }
+
+    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Surface* surface = TTF_RenderText_Solid(font, message, textColor);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(app->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    prepareScene(app);
+    blit(texture, 100, 100, app); 
+    presentScene(app);
+    SDL_DestroyTexture(texture);
+    TTF_CloseFont(font); 
+}
+
 
