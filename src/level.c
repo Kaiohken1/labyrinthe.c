@@ -97,21 +97,3 @@ double getTotalTime(List li) {
     }
     return current->totalTime;
 }
-
-void printList(List li)
-{
-	if(isEmptyList(li))
-	{
-		printf("Rien a afficher, la Liste est vide.\n");
-		return;
-	}
-
-	while(li != NULL)
-	{
-		printf("[%d] ", li->totalTime);
-		li = li->next;
-	}
-
-	printf("\n");
-}
-

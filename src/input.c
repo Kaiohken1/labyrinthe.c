@@ -1,6 +1,7 @@
 #include "input.h"
 #include "def.h"
 #include "draw.h"
+#include <string.h>
 
  void inputEvent(App *app) {
     SDL_Event event;
