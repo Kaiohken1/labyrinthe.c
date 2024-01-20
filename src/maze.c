@@ -122,7 +122,7 @@ void moveCursor(Cell *cursor, int dx, int dy) {
 void createExit(Maze *maze) {
     int botY = maze->height - 2;
 
-    for (int botX = maze->width - 1; botX >= maze->width - 2; botX--) {
+    for (int botX = maze->width - 1; botX >= maze->width - 3; botX--) {
         if (botX >= 0 && botY >= 0 && botX < maze->width && botY < maze->height) {
             int index = botY * maze->width + botX;
             maze->tab[botX][botY].isWall = FALSE;

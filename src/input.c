@@ -1,5 +1,6 @@
 #include "input.h"
 #include "def.h"
+#include "draw.h"
 
  void inputEvent(App *app) {
     SDL_Event event;
@@ -88,4 +89,44 @@ void doKeyUp(SDL_KeyboardEvent *event, App *app) {
                 break;
         }
     }
+}
+
+void getUserInput(App *app, const char *message, char *inputText, int maxLength) {
+    Bool isEnteringText = TRUE;
+    int textLength = 0; 
+
+    SDL_StartTextInput();
+
+    while (isEnteringText && app->programLaunched) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                app->programLaunched = SDL_FALSE;
+                isEnteringText = FALSE;
+            } else if (e.type == SDL_TEXTINPUT) {
+                int newLength = textLength + strlen(e.text.text);
+                if (newLength < maxLength && newLength <= 10) {
+                    strcat(inputText, e.text.text);
+                    textLength = newLength;
+                }
+            } else if (e.type == SDL_KEYDOWN) {
+                if (e.key.keysym.sym == SDLK_BACKSPACE && textLength > 0) {
+                    inputText[textLength - 1] = '\0';
+                    textLength--;
+                } else if (e.key.keysym.sym == SDLK_RETURN) {
+                    if (textLength > 0) { 
+                        isEnteringText = FALSE;
+                    }
+                }
+            }
+        }
+
+        prepareScene(app);
+        drawText(app, message, 100, 50);
+        drawText(app, "Entrez votre nom : ", 100, 150); 
+        drawText(app, inputText, 380, 150);
+        presentScene(app);
+    }
+
+    SDL_StopTextInput();
 }

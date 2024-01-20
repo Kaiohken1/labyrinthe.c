@@ -6,6 +6,7 @@
 #include "def.h"
 #include "level.h"
 #include <time.h>
+#include "database.h"
 
 /*
 Compilation du programme :
@@ -118,13 +119,15 @@ int main(int argc, char **argv) {
     char timeStr[100];
 
     sprintf(timeStr,"Vous vous etes echappes en : %.2lf secondes", total);
+    char playerName[10] = {0};
+    getUserInput(app, timeStr, playerName, sizeof(playerName));
 
-    drawText(app, timeStr); 
+    sqlite3 *db;
+    callDB(db, app, total, playerName);
 
     while (app->programLaunched) {
         inputEvent(app);
     }
-
 
     timeList = clearList(timeList);
     SDL_Exit(app, NULL, NULL);

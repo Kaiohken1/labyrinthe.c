@@ -47,4 +47,9 @@ typedef struct ListElement {
     struct ListElement *next;
 } ListElement, *List;
 
+typedef struct {
+    char lines[10][128]; 
+    int count;           
+} CallbackData;
+
 #endif

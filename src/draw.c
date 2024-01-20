@@ -49,7 +49,7 @@ void blit(SDL_Texture *texture, int x, int y, App *app) {
     SDL_RenderCopy(app->renderer, texture, NULL, &dest);
 }
 
-void drawText(App *app, const char *message) {
+void drawText(App *app, const char *message, int x, int y) {
     TTF_Font *font = TTF_OpenFont("font/slkscr.ttf", 24);
     if (!font) {
         SDL_ExitWithError("Erreur lors du chargement de la police", app, NULL, NULL);
@@ -60,9 +60,7 @@ void drawText(App *app, const char *message) {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(app->renderer, surface);
     SDL_FreeSurface(surface);
 
-    prepareScene(app);
-    blit(texture, 100, 100, app); 
-    presentScene(app);
+    blit(texture, x, y, app); 
     SDL_DestroyTexture(texture);
     TTF_CloseFont(font); 
 }
