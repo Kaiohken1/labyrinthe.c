@@ -17,4 +17,5 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App * app);
 void createEntry(Maze *maze);
 void createExit(Maze *maze);
 void freeGrid(Maze *maze);
+Bool checkCollision(Maze *maze, Entity *entity, int newX, int newY);
 #endif

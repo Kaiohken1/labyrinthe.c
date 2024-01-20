@@ -41,4 +41,10 @@ typedef struct {
     int capacity;
 } Stack;
 
+typedef struct ListElement {
+    double time;
+    double totalTime;
+    struct ListElement *next;
+} ListElement, *List;
+
 #endif

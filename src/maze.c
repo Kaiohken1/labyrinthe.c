@@ -287,3 +287,16 @@ void freeGrid(Maze *maze) {
         free(maze->tab);
     }
 }
+
+Bool checkCollision(Maze *maze, Entity *entity, int newX, int newY) {
+    int cellX = newX / CELL_SIZE;
+    int cellY = newY / CELL_SIZE;
+
+    if (cellX >= 0 && cellX < maze->width && cellY >= 0 && cellY < maze->height) {
+        if (maze->tab[cellX][cellY].isWall == TRUE) {
+            return TRUE; 
+        }
+    }
+
+    return FALSE; 
+}
