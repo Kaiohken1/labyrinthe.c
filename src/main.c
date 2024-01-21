@@ -15,8 +15,9 @@ gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ima
 bin\prog.exe
 */
 
-void runGame(App *app, List timeList) {
+void runGame(App *app) {
     int level = 1;
+    List timeList = newList();
     Bool gameOver = FALSE;
     time_t startTime, endTime;
 
@@ -129,7 +130,7 @@ void runGame(App *app, List timeList) {
             inputEvent(app);
             if (app->restart) {
                 app->restart = SDL_FALSE;
-                runGame(app, timeList);
+                runGame(app);
             break;
             }
         }
@@ -147,7 +148,7 @@ void runGame(App *app, List timeList) {
             inputEvent(app);
             if (app->restart) {
                 app->restart = SDL_FALSE;
-                runGame(app, timeList);
+                runGame(app);
             break;
             }
         }
@@ -165,9 +166,7 @@ int main(int argc, char **argv) {
 
     srand(time(NULL)); 
     
-    List timeList = newList();
-
-    runGame(app, timeList);
+    runGame(app);
 
     SDL_Exit(app, NULL, NULL, NULL);
 
