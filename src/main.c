@@ -108,7 +108,7 @@ void runGame(App *app) {
             doInput(app);
 
 
-            if (player->x < 0 || player->x >= SCREEN_WIDTH || player->y < 0 || player->y >= SCREEN_HEIGHT) {
+            if (player->x < 0 || player->x > MAZE_WIDTH * CELL_SIZE || player->y < 0 || player->y > MAZE_HEIGHT * CELL_SIZE) {
                 levelCompleted = TRUE; 
             }
 

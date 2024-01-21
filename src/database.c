@@ -130,7 +130,6 @@ void displayScores(App *app) {
     }
 
     CallbackData *data = malloc(sizeof(CallbackData));
-    // CallbackData data = { .count = 0 } 
     if (data == NULL) {
         fprintf(stderr, "Erreur d'allocation mémoire\n");
         sqlite3_close(db);
