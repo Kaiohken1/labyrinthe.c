@@ -6,6 +6,7 @@ typedef struct {
     SDL_Renderer *renderer;
     SDL_Window *window;
     SDL_bool programLaunched;
+    SDL_bool restart;
     int up;
 	int down;
 	int left;

@@ -19,7 +19,7 @@ void presentScene(App *app) {
 SDL_Texture *loadTexture(char *filename, App *app) {
     char *basePath = SDL_GetBasePath();
     if (basePath == NULL) {
-        SDL_ExitWithError("Erreur lors de l'obtention du chemin de base", app, NULL, NULL);
+        SDL_ExitWithError("Erreur lors de l'obtention du chemin de base", app, NULL, NULL, NULL);
     }
 
     for (char *p = basePath; *p; p++) {
@@ -39,7 +39,7 @@ SDL_Texture *loadTexture(char *filename, App *app) {
     SDL_free(basePath);
 
     if (texture == NULL) {
-        SDL_ExitWithError("Chargement de l'image échoué", app, NULL, NULL);
+        SDL_ExitWithError("Chargement de l'image échoué", app, NULL, NULL, NULL);
     }
 
     return texture;
@@ -58,7 +58,7 @@ void showTexture(SDL_Texture *texture, int x, int y, int largeurTexture, int hau
     dest.h = hauteurTexture; 
 
     if(SDL_RenderCopy(app->renderer, texture, NULL, &dest) != 0)
-        SDL_ExitWithError("Impossible d'afficher la texture", app, NULL, NULL);
+        SDL_ExitWithError("Impossible d'afficher la texture", app, NULL, NULL, NULL);
 }
 
 void blit(SDL_Texture *texture, int x, int y, App *app) {

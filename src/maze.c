@@ -246,7 +246,7 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
 
     SDL_Texture *texture = loadTexture("img/stone.jpg", app);
     if(texture == NULL) {
-        SDL_ExitWithError("Impossible de charger la texture du labyrinthe", app, maze, NULL);
+        SDL_ExitWithError("Impossible de charger la texture du labyrinthe", app, maze, NULL, NULL);
     }
 
     for (int x = 0; x < maze->width; x++) {

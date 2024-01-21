@@ -7,6 +7,7 @@
 #include "level.h"
 #include <time.h>
 #include "database.h"
+#include "ai.h"
 
 /*
 Compilation du programme :
@@ -14,25 +15,18 @@ gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ima
 bin\prog.exe
 */
 
-
-int main(int argc, char **argv) {
-    App *app = initSDL();
-
-    if (app == NULL) {
-        SDL_ExitWithError("Initialisation SDL a échoué", NULL, NULL, NULL);
-    }
-
-    srand(time(NULL)); 
+void runGame(App *app, List timeList) {
     int level = 1;
-    List timeList = newList();
+    Bool gameOver = FALSE;
     time_t startTime, endTime;
 
-    while (level <= 2) {
+    while (level <= 2 && gameOver == FALSE) {
         Maze *maze = malloc(sizeof(Maze));
         Entity *player = malloc(sizeof(Entity));
+        Entity *ai = malloc(sizeof(Entity));
 
-        if (maze == NULL || player == NULL) {
-            SDL_ExitWithError("Allocation de mémoire pour le niveau a échoué", app, maze, player);
+        if (maze == NULL || player == NULL || ai == NULL) {
+            SDL_ExitWithError("Allocation de mémoire pour le niveau a échoué", app, maze, player, ai);
         }
 
         appInit(app);
@@ -44,16 +38,20 @@ int main(int argc, char **argv) {
 
         int startX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
         int startY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int endX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + (MAZE_WIDTH - 1) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int endY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + (MAZE_HEIGHT - 2) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+
         player->x = startX;
         player->y = startY;
 
-        // Variables pour stocker la position précédente du joueur
         int prevX = player->x;
         int prevY = player->y;
 
+        loadAi(app, ai, endX, endY);
+
         SDL_Texture *buffer = SDL_CreateTexture(app->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
         if(buffer == NULL) {
-            SDL_ExitWithError("Erreur lors de la création du buffer", app, maze, player);
+            SDL_ExitWithError("Erreur lors de la création du buffer", app, maze, player, ai);
         }
 
         SDL_SetRenderTarget(app->renderer, buffer);
@@ -66,10 +64,11 @@ int main(int argc, char **argv) {
         while (app->programLaunched) {    
             inputEvent(app);
 
-    
+            
             int newX = player->x;
             int newY = player->y;
 
+            
             if (app->up && !app->down) {
                 newY -= CELL_SIZE; 
             } else if (app->down && !app->up) {
@@ -87,11 +86,17 @@ int main(int argc, char **argv) {
                 player->y = newY;
             }
 
+            if (player->x == ai->x && player->y == ai->y) {
+                gameOver = TRUE;
+                break;
+            }
+
+            updateAiPosition(ai, player, maze);
             prepareScene(app);
 
             SDL_RenderCopy(app->renderer, buffer, NULL, NULL);
-
             blit(player->texture, player->x, player->y, app);
+            blit(ai->texture, ai->x, ai->y, app);
 
             presentScene(app);
             doInput(app);
@@ -101,36 +106,70 @@ int main(int argc, char **argv) {
                 levelCompleted = TRUE; 
             }
 
-            if (levelCompleted) {
+            if (levelCompleted && gameOver == FALSE) {
                 clock_t endClock = clock();
                 double elapsedTime = (double)(endClock - startClock) / CLOCKS_PER_SEC;
                 timeList = pushBackList(timeList, elapsedTime);
                 level++; 
                 break;
             }
-        }
+        } 
 
         freeGrid(maze);
         free(maze);
         free(player);
     }
 
-    double total = getTotalTime(timeList);
-    char timeStr[100];
+    if(gameOver) {
+        prepareScene(app);
+        drawText(app, "Vous avez perdu !", 100, 50);
+        drawText(app, "Appuyez sur R pour rejouer", 100, 150); 
+        presentScene(app);
+        while (app->programLaunched) {
+            inputEvent(app);
+            if (app->restart) {
+                app->restart = SDL_FALSE;
+                runGame(app, timeList);
+            break;
+            }
+        }
+    } else {
+        double total = getTotalTime(timeList);
+        char timeStr[100];
+        sprintf(timeStr,"Vous vous etes echappes en : %.2lf secondes", total);
+        char playerName[10] = {0};
+        getUserInput(app, timeStr, playerName, sizeof(playerName));
 
-    sprintf(timeStr,"Vous vous etes echappes en : %.2lf secondes", total);
-    char playerName[10] = {0};
-    getUserInput(app, timeStr, playerName, sizeof(playerName));
+        sqlite3 *db;
+        callDB(db, app, total, playerName);
 
-    sqlite3 *db;
-    callDB(db, app, total, playerName);
+        while (app->programLaunched) {
+            inputEvent(app);
+            if (app->restart) {
+                app->restart = SDL_FALSE;
+                runGame(app, timeList);
+            break;
+            }
+        }
 
-    while (app->programLaunched) {
-        inputEvent(app);
+        timeList = clearList(timeList);
+    }
+}
+
+int main(int argc, char **argv) {
+    App *app = initSDL();
+
+    if (app == NULL) {
+        SDL_ExitWithError("Initialisation SDL a échoué", NULL, NULL, NULL, NULL);
     }
 
-    timeList = clearList(timeList);
-    SDL_Exit(app, NULL, NULL);
+    srand(time(NULL)); 
+    
+    List timeList = newList();
+
+    runGame(app, timeList);
+
+    SDL_Exit(app, NULL, NULL, NULL);
 
     return EXIT_SUCCESS;
 }

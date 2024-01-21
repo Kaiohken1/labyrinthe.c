@@ -152,6 +152,8 @@ void displayScores(App *app) {
             drawText(app, data->lines[i], 100, y);
             y += 30;
         }
+
+        drawText(app, "Appuyez sur R pour rejouer", 100, 500); 
         presentScene(app);
     }
 

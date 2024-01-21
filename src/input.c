@@ -3,7 +3,7 @@
 #include "draw.h"
 #include <string.h>
 
- void inputEvent(App *app) {
+void inputEvent(App *app) {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
@@ -11,6 +11,10 @@
             case SDL_QUIT:
                 app->programLaunched = SDL_FALSE;
                 break;
+            
+            case SDL_KEYDOWN:
+                doKeyDown(&event.key, app); // Passer app en tant qu'argument
+            break;
 
             default:
                 break;
@@ -63,6 +67,8 @@ void doKeyDown(SDL_KeyboardEvent *event, App *app) {
             case SDL_SCANCODE_RIGHT:
                 app->right = 1;
                 break;
+            case SDL_SCANCODE_R:
+                app->restart = SDL_TRUE;
            
             default:
                 break;

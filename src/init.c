@@ -9,21 +9,21 @@ App *initSDL() {
     App *app = malloc(sizeof(App));
 
     if (app == NULL) {
-        SDL_ExitWithError("Erreur : Allocation de mémoire pour l'app a echoue.\n", NULL, NULL, NULL);
+        SDL_ExitWithError("Erreur : Allocation de mémoire pour l'app a echoue.\n", NULL, NULL, NULL, NULL);
     }
 
     if(SDL_Init(SDL_INIT_VIDEO) !=0)
-        SDL_ExitWithError("Initialisation de SDL", app, NULL, NULL);
+        SDL_ExitWithError("Initialisation de SDL", app, NULL, NULL, NULL);
 
     if(SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &app->window, &app->renderer) != 0)
-        SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL);
+        SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL, NULL);
 
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
     if ((IMG_Init(imgFlags) & imgFlags) != imgFlags)
-        SDL_ExitWithError("Erreur d'initialisation de SDL_image", app, NULL, NULL);
+        SDL_ExitWithError("Erreur d'initialisation de SDL_image", app, NULL, NULL, NULL);
 
     if (TTF_Init() == -1)
-        SDL_ExitWithError("Erreur d'initilisation de SDL_TTF", app, NULL, NULL);
+        SDL_ExitWithError("Erreur d'initilisation de SDL_TTF", app, NULL, NULL, NULL);
 
 
     return app;
@@ -31,13 +31,14 @@ App *initSDL() {
 
 void appInit(App *app) {
     app->programLaunched = TRUE;
+    app->restart = FALSE;
     app->up = 0;
     app->down = 0;
     app->left = 0;
     app->right = 0;
 }
 
-void SDL_Exit(App *app, Maze * maze, Entity *player) {
+void SDL_Exit(App *app, Maze * maze, Entity *player, Entity *enemy) {
     if (app != NULL) {
         if (app->renderer != NULL) {
             SDL_DestroyRenderer(app->renderer);
@@ -57,6 +58,10 @@ void SDL_Exit(App *app, Maze * maze, Entity *player) {
 
     if(player != NULL) {
         free(player);
+    }
+
+    if(enemy != NULL) {
+        free(enemy);
     }
 
     IMG_Quit();
@@ -64,7 +69,7 @@ void SDL_Exit(App *app, Maze * maze, Entity *player) {
 }
 
 
-void SDL_ExitWithError(const char *message, App *app, Maze *maze, Entity *player) {
+void SDL_ExitWithError(const char *message, App *app, Maze *maze, Entity *player, Entity *enemy) {
     if (app != NULL) {
         if (app->renderer != NULL) {
             SDL_DestroyRenderer(app->renderer);
@@ -84,6 +89,10 @@ void SDL_ExitWithError(const char *message, App *app, Maze *maze, Entity *player
 
     if(player != NULL) {
         free(player);
+    }
+
+    if(enemy != NULL) {
+        free(enemy);
     }
 
     IMG_Quit();
