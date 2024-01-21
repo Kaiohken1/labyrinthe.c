@@ -8,7 +8,10 @@ void initDB() {
     char *errMsg = 0;
     int rc;
 
-    rc = sqlite3_open("mazeBDD.db", &db);
+    char fullPath[1024];
+    getDatabasePath(fullPath, sizeof(fullPath));
+
+    rc = sqlite3_open(fullPath, &db);
     if (rc) {
         fprintf(stderr, "Impossible d'ouvrir la base de données: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
@@ -30,7 +33,10 @@ void insertScore(const char *name, double score) {
     sqlite3_stmt *stmt;
     int rc;
 
-    rc = sqlite3_open("mazeBDD.db", &db);
+    char fullPath[1024];
+    getDatabasePath(fullPath, sizeof(fullPath));
+
+    rc = sqlite3_open(fullPath, &db);
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Impossible d'ouvrir la base de données: %s\n", sqlite3_errmsg(db));
     }
@@ -114,7 +120,10 @@ void displayScores(App *app) {
     char *errMsg = 0;
     int rc;
 
-    rc = sqlite3_open("mazeBDD.db", &db);
+    char fullPath[1024];
+    getDatabasePath(fullPath, sizeof(fullPath));
+    
+    rc = sqlite3_open(fullPath, &db);
     if (rc) {
         fprintf(stderr, "Impossible d'ouvrir la base de données: %s\n", sqlite3_errmsg(db));
         return;
@@ -154,7 +163,10 @@ void displayScores(App *app) {
 
 void callDB(sqlite3 *db, App *app, double time, const char *name) {
     initDB();
-    sqlite3_open("mazeBDD.db", &db);
+    char fullPath[1024];
+    getDatabasePath(fullPath, sizeof(fullPath));
+
+    sqlite3_open(fullPath, &db);
 
     deleteScore(db, time);
     insertScore(name, time);
@@ -162,3 +174,28 @@ void callDB(sqlite3 *db, App *app, double time, const char *name) {
 
     sqlite3_close(db);
 }
+
+void getDatabasePath(char *fullPath, size_t fullPathSize) {
+    char *basePath = SDL_GetBasePath();
+    if (basePath == NULL) {
+        fprintf(stderr, "Erreur lors de l'obtention du chemin de base: %s\n", SDL_GetError());
+        strcpy(fullPath, "mazeBDD.db");  
+        return;
+    }
+
+
+    for (char *p = basePath; *p; p++) {
+        if (*p == '\\') {
+            *p = '/';
+        }
+    }
+
+    char *binSegment = strstr(basePath, "/bin");
+    if (binSegment != NULL) {
+        *binSegment = '\0';  
+    }
+
+    snprintf(fullPath, fullPathSize, "%s/mazeBDD.db", basePath);
+    SDL_free(basePath);
+}
+
