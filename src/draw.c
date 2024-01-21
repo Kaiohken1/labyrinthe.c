@@ -29,7 +29,7 @@ SDL_Texture *loadTexture(char *filename, App *app) {
     }
     char *binSegment = strstr(basePath, "/bin");
     if (binSegment != NULL) {
-        *binSegment = '\0';  // Supprime '/bin' du chemin
+        *binSegment = '\0';  
     }
 
     char fullPath[1024];
@@ -80,17 +80,16 @@ TTF_Font* loadFont(char *filename, int fontSize) {
         return NULL;
     }
 
-    // Convertir les séparateurs de chemin
+  
     for (char *p = basePath; *p; p++) {
         if (*p == '\\') {
             *p = '/';
         }
     }
 
-    // Trouver et supprimer le segment 'bin'
     char *binSegment = strstr(basePath, "/bin");
     if (binSegment != NULL) {
-        *binSegment = '\0';  // Supprime '/bin' du chemin
+        *binSegment = '\0';  
     }
 
     char fullPath[1024];

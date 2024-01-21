@@ -68,18 +68,23 @@ void runGame(App *app) {
             
             int newX = player->x;
             int newY = player->y;
+            const int delay = 70; 
+            static int lastMoveTime = 0;
+            int currentTime = SDL_GetTicks();
 
-            
-            if (app->up && !app->down) {
-                newY -= CELL_SIZE; 
-            } else if (app->down && !app->up) {
-                newY += CELL_SIZE;
-            }
+            if (currentTime - lastMoveTime > delay) {
+                if (app->up && !app->down) {
+                    newY -= CELL_SIZE; 
+                } else if (app->down && !app->up) {
+                    newY += CELL_SIZE;
+                }
 
-            if (app->left && !app->right) {
-                newX -= CELL_SIZE; 
-            } else if (app->right && !app->left) {
-                newX += CELL_SIZE;
+                if (app->left && !app->right) {
+                    newX -= CELL_SIZE; 
+                } else if (app->right && !app->left) {
+                    newX += CELL_SIZE;
+                }
+                lastMoveTime = currentTime;
             }
 
             if (!checkCollision(maze, player, newX, newY)) {
