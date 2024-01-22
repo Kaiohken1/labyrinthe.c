@@ -1,7 +1,6 @@
 #include "database.h"
 #include <stdio.h>
 #include "draw.h"
-#include <string.h>
 
 void initDB() {
     sqlite3 *db;
@@ -9,7 +8,7 @@ void initDB() {
     int rc;
 
     char fullPath[1024];
-    getDatabasePath(fullPath, sizeof(fullPath));
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
 
     rc = sqlite3_open(fullPath, &db);
     if (rc) {
@@ -34,7 +33,7 @@ void insertScore(const char *name, double score) {
     int rc;
 
     char fullPath[1024];
-    getDatabasePath(fullPath, sizeof(fullPath));
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
 
     rc = sqlite3_open(fullPath, &db);
     if (rc != SQLITE_OK) {
@@ -121,7 +120,7 @@ void displayScores(App *app) {
     int rc;
 
     char fullPath[1024];
-    getDatabasePath(fullPath, sizeof(fullPath));
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
     
     rc = sqlite3_open(fullPath, &db);
     if (rc) {
@@ -165,7 +164,7 @@ void displayScores(App *app) {
 void callDB(sqlite3 *db, App *app, double time, const char *name) {
     initDB();
     char fullPath[1024];
-    getDatabasePath(fullPath, sizeof(fullPath));
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
 
     sqlite3_open(fullPath, &db);
 
@@ -174,29 +173,5 @@ void callDB(sqlite3 *db, App *app, double time, const char *name) {
     displayScores(app);
 
     sqlite3_close(db);
-}
-
-void getDatabasePath(char *fullPath, size_t fullPathSize) {
-    char *basePath = SDL_GetBasePath();
-    if (basePath == NULL) {
-        fprintf(stderr, "Erreur lors de l'obtention du chemin de base: %s\n", SDL_GetError());
-        strcpy(fullPath, "mazeBDD.db");  
-        return;
-    }
-
-
-    for (char *p = basePath; *p; p++) {
-        if (*p == '\\') {
-            *p = '/';
-        }
-    }
-
-    char *binSegment = strstr(basePath, "/bin");
-    if (binSegment != NULL) {
-        *binSegment = '\0';  
-    }
-
-    snprintf(fullPath, fullPathSize, "%s/mazeBDD.db", basePath);
-    SDL_free(basePath);
 }
 

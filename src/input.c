@@ -102,11 +102,12 @@ void doKeyUp(SDL_KeyboardEvent *event, App *app) {
 void getUserInput(App *app, const char *message, char *inputText, int maxLength) {
     Bool isEnteringText = TRUE;
     int textLength = 0; 
+    inputText[0] = '\0';
 
     SDL_StartTextInput();
 
     while (isEnteringText && app->programLaunched) {
-        SDL_Event e;
+        SDL_Event e = {0};
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 app->programLaunched = SDL_FALSE;

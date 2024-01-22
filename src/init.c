@@ -101,3 +101,32 @@ void SDL_ExitWithError(const char *message, App *app, Maze *maze, Entity *player
     SDL_Quit();
     exit(EXIT_FAILURE);
 }
+
+void getBasePath(char *fullPath, const char *fileName, size_t fullPathSize) {
+
+    char *basePath = SDL_GetBasePath();
+    if (basePath == NULL) {
+        fprintf(stderr, "Erreur lors de l'obtention du chemin de base: %s\n", SDL_GetError());
+        strncpy(fullPath, fileName, fullPathSize);
+        fullPath[fullPathSize - 1] = '\0'; 
+        return;
+    }
+
+    for (char *p = basePath; *p; p++) {
+        if (*p == '\\') {
+            *p = '/';
+        }
+    }
+
+
+    char *binSegment = strstr(basePath, "/bin");
+    if (binSegment != NULL) {
+        *binSegment = '\0';
+    }
+
+
+    snprintf(fullPath, fullPathSize, "%s/%s", basePath, fileName);
+    fullPath[fullPathSize - 1] = '\0';
+
+    SDL_free(basePath);
+}

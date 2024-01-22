@@ -17,31 +17,14 @@ void presentScene(App *app) {
 }
 
 SDL_Texture *loadTexture(char *filename, App *app) {
-    char *basePath = SDL_GetBasePath();
-    if (basePath == NULL) {
-        SDL_ExitWithError("Erreur lors de l'obtention du chemin de base", app, NULL, NULL, NULL);
-    }
-
-    for (char *p = basePath; *p; p++) {
-        if (*p == '\\') {
-            *p = '/';
-        }
-    }
-    char *binSegment = strstr(basePath, "/bin");
-    if (binSegment != NULL) {
-        *binSegment = '\0';  
-    }
-
     char fullPath[1024];
-    snprintf(fullPath, sizeof(fullPath), "%s/%s", basePath, filename);
-    SDL_Texture *texture = IMG_LoadTexture(app->renderer, fullPath);
+    getBasePath(fullPath, filename, sizeof(fullPath));
 
-    SDL_free(basePath);
+    SDL_Texture *texture = IMG_LoadTexture(app->renderer, fullPath);
 
     if (texture == NULL) {
         SDL_ExitWithError("Chargement de l'image échoué", app, NULL, NULL, NULL);
     }
-
     return texture;
 }
 
@@ -73,45 +56,45 @@ void blit(SDL_Texture *texture, int x, int y, App *app) {
     SDL_RenderCopy(app->renderer, texture, NULL, &dest);
 }
 
-TTF_Font* loadFont(char *filename, int fontSize) {
-    char *basePath = SDL_GetBasePath();
-    if (basePath == NULL) {
-        fprintf(stderr, "Erreur lors de l'obtention du chemin de base: %s\n", SDL_GetError());
-        return NULL;
-    }
+// TTF_Font* loadFont(char *filename, int fontSize) {
+//     char font[1024];
+//     getBasePath(font, filename, sizeof(font));
 
-  
-    for (char *p = basePath; *p; p++) {
-        if (*p == '\\') {
-            *p = '/';
-        }
-    }
+//     return font;
+// }
 
-    char *binSegment = strstr(basePath, "/bin");
-    if (binSegment != NULL) {
-        *binSegment = '\0';  
+void drawText(App *app, const char *message, int x, int y) {
+    if (message == NULL || message[0] == '\0') {
+        return;
     }
 
     char fullPath[1024];
-    snprintf(fullPath, sizeof(fullPath), "%s/%s", basePath, filename);
-    TTF_Font *font = TTF_OpenFont(fullPath, fontSize);
+    getBasePath(fullPath, "font/slkscr.ttf", sizeof(fullPath));
 
-    SDL_free(basePath);
-
+    
+    TTF_Font *font = TTF_OpenFont(fullPath, 24);
     if (font == NULL) {
-        fprintf(stderr, "Chargement de la police échoué : %s\n", TTF_GetError());
+        fprintf(stderr, "Erreur lors du chargement de la police: %s\n", TTF_GetError());
+        return;
     }
-
-    return font;
-}
-
-void drawText(App *app, const char *message, int x, int y) {
-    TTF_Font *font = loadFont("font/slkscr.ttf", 24);
 
     SDL_Color textColor = {255, 255, 255, 255};
     SDL_Surface* surface = TTF_RenderText_Solid(font, message, textColor);
+
+    if (surface == NULL) {
+        fprintf(stderr, "Erreur lors de la création de la surface: %s\n", TTF_GetError());
+        TTF_CloseFont(font);
+        return;
+    }
+
     SDL_Texture* texture = SDL_CreateTextureFromSurface(app->renderer, surface);
     SDL_FreeSurface(surface);
+
+    if (texture == NULL) {
+        fprintf(stderr, "Erreur lors de la création de la texture: %s\n", SDL_GetError());
+        TTF_CloseFont(font);
+        return;
+    }
 
     blit(texture, x, y, app); 
     SDL_DestroyTexture(texture);
