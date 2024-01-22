@@ -6,22 +6,26 @@
 #include "def.h"
 #include "level.h"
 #include <time.h>
+#include "ini.h"
+#include <string.h>
+#include "config.h"
+
 #include "database.h"
 #include "ai.h"
 
 /*
 Compilation du programme :
-gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+gcc src/*.c -o bin/monjeu -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+
 bin\prog.exe
 */
-
 void runGame(App *app) {
     int level = 1;
     List timeList = newList();
     Bool gameOver = FALSE;
     time_t startTime, endTime;
-
-    while (level <= 2 && gameOver == FALSE) {
+int NumberOfLevels = parseIniFileint("src/config.onoo","NumberOfLevels");
+    while (level <= NumberOfLevels && gameOver == FALSE) {
         Maze *maze = malloc(sizeof(Maze));
         Entity *player = malloc(sizeof(Entity));
         Entity *ai = malloc(sizeof(Entity));
@@ -86,7 +90,7 @@ void runGame(App *app) {
                 }
                 lastMoveTime = currentTime;
             }
-
+    
             if (!checkCollision(maze, player, newX, newY)) {
                 player->x = newX;
                 player->y = newY;
