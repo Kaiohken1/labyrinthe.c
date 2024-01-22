@@ -13,7 +13,8 @@
 
 /*
 Compilation du programme :
-gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+gcc src/*.c -o bin/monjeu -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+
 bin\prog.exe
 */
 
@@ -25,7 +26,7 @@ bin\prog.exe
 
 
 int main(int argc, char **argv) {
-  int NumberOfLevels = parseIniFile("src/config.onoo", "NumberOfLevels");
+  int NumberOfLevels = parseIniFile("src/config.onoo");
      printf("Nombre de niveaux : %d\n", NumberOfLevels);
     App *app = initSDL();
 
