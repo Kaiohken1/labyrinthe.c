@@ -6,34 +6,37 @@
 
 #define MAX_LINE_LENGTH 256
 
-int parseIniFile(char *filename) {
+int parseIniFileint(char *filename, char *key) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         perror("Impossible d'ouvrir le fichier de configuration");
-        return -1; // Return a value to indicate an error
+        return -1;
     }
 
-    int NumberOfLevels = -1; // Default value
+    int value = -1; // Default value
+    char line[MAX_LINE_LENGTH];
 
-    char line[MAX_LINE_LENGTH]; // Use MAX_LINE_LENGTH here
     while (fgets(line, sizeof(line), file)) {
-        // Search for the line containing NumberOfLevels
-        if (strstr(line, "NumberOfLevels") != NULL) {
-            // Use sscanf to extract the value
-            if (sscanf(line, "NumberOfLevels = %d", &NumberOfLevels) == 1) {
-                break; // Exit the loop once the value is found
+        char keyFromFile[MAX_LINE_LENGTH];
+        int tempValue;
+
+        // Utilisation de sscanf pour extraire la clé et la valeur
+        if (sscanf(line, "%s = %d", keyFromFile, &tempValue) == 2) {
+            if (strcmp(keyFromFile, key) == 0) {
+                value = tempValue;
+                break;
             }
         }
     }
 
     fclose(file);
 
-    if (NumberOfLevels != -1) {
-        printf("Nombre de niveaux : %d\n", NumberOfLevels);
+    if (value != -1) {
+        printf("%s : %d\n", key, value);
     } else {
-        printf("NumberOfLevels non trouvé dans le fichier de configuration.\n");
+        printf("%s non trouvé dans le fichier de configuration.\n", key);
     }
 
-    return NumberOfLevels; 
+    return value;
 }
 

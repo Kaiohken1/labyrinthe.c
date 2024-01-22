@@ -26,8 +26,13 @@ bin\prog.exe
 
 
 int main(int argc, char **argv) {
-  int NumberOfLevels = parseIniFile("src/config.onoo");
-     printf("Nombre de niveaux : %d\n", NumberOfLevels);
+  
+  
+  int NumberOfLevels = parseIniFileint("src/config.onoo","NumberOfLevels");
+  printf("Nombre de niveaux : %d\n", NumberOfLevels);
+    
+    
+    
     App *app = initSDL();
 
     if (app == NULL) {

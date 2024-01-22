@@ -2,5 +2,5 @@
 #define INI_H
 
 
-int parseIniFile(char *filename);
+int parseIniFileint(char *filename, char *key);
 #endif 
