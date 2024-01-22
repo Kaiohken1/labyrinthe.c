@@ -6,6 +6,10 @@
 #include "def.h"
 #include "level.h"
 #include <time.h>
+#include "ini.h"
+#include <string.h>
+#include "config.h"
+
 
 /*
 Compilation du programme :
@@ -14,7 +18,15 @@ bin\prog.exe
 */
 
 
+
+
+
+
+
+
 int main(int argc, char **argv) {
+  int NumberOfLevels = parseIniFile("src/config.onoo", "NumberOfLevels");
+     printf("Nombre de niveaux : %d\n", NumberOfLevels);
     App *app = initSDL();
 
     if (app == NULL) {
@@ -26,7 +38,7 @@ int main(int argc, char **argv) {
     List timeList = newList();
     time_t startTime, endTime;
 
-    while (level <= 2) {
+    while (level <= NumberOfLevels) {
         Maze *maze = malloc(sizeof(Maze));
         Entity *player = malloc(sizeof(Entity));
 
