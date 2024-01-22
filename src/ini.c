@@ -40,3 +40,37 @@ int parseIniFileint(char *filename, char *key) {
     return value;
 }
 
+
+char* parseIniFileString(char *filename, char *key) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Impossible d'ouvrir le fichier de configuration");
+        return NULL;
+    }
+
+    char *value = NULL;
+    char line[MAX_LINE_LENGTH];
+
+    while (fgets(line, sizeof(line), file)) {
+        char keyFromFile[MAX_LINE_LENGTH];
+        char tempValue[MAX_LINE_LENGTH];
+
+        // Utilisation de sscanf pour extraire la clé et la valeur
+        if (sscanf(line, "%s = %s", keyFromFile, tempValue) == 2) {
+            if (strcmp(keyFromFile, key) == 0) {
+                value = strdup(tempValue);
+                break;
+            }
+        }
+    }
+
+    fclose(file);
+
+    if (value != NULL) {
+        printf("%s : %s\n", key, value);
+    } else {
+        printf("%s non trouvé dans le fichier de configuration.\n", key);
+    }
+
+    return value;
+}

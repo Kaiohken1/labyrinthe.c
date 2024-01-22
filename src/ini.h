@@ -3,4 +3,6 @@
 
 
 int parseIniFileint(char *filename, char *key);
+
+char* parseIniFileString(char *filename, char *key);
 #endif 
