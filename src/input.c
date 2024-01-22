@@ -2,6 +2,7 @@
 #include "def.h"
 #include "draw.h"
 #include <string.h>
+#include <ctype.h>
 
 void inputEvent(App *app) {
     SDL_Event event;
@@ -111,10 +112,12 @@ void getUserInput(App *app, const char *message, char *inputText, int maxLength)
                 app->programLaunched = SDL_FALSE;
                 isEnteringText = FALSE;
             } else if (e.type == SDL_TEXTINPUT) {
-                int newLength = textLength + strlen(e.text.text);
-                if (newLength < maxLength && newLength <= 10) {
-                    strcat(inputText, e.text.text);
-                    textLength = newLength;
+                if(isalpha(e.text.text[0])) {
+                    int newLength = textLength + strlen(e.text.text);
+                    if (newLength < maxLength) {
+                        strcat(inputText, e.text.text);
+                        textLength = newLength;
+                    }
                 }
             } else if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_BACKSPACE && textLength > 0) {

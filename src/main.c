@@ -144,7 +144,7 @@ void runGame(App *app) {
         char timeStr[100];
         sprintf(timeStr,"Vous vous etes echappes en : %.2lf secondes", total);
         char playerName[10] = {0};
-        getUserInput(app, timeStr, playerName, sizeof(playerName));
+        getUserInput(app, timeStr, playerName, 10);
 
         sqlite3 *db;
         callDB(db, app, total, playerName);
