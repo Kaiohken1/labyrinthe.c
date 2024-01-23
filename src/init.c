@@ -4,7 +4,6 @@
 #include "def.h"
 #include "maze.h"
 #include <SDL_ttf.h>
-#include "ini.h"
 
 
 
@@ -23,8 +22,8 @@ App *initSDL() {
         SDL_ExitWithError("Impossible d'obtenir la résolution de l'écran", app, NULL, NULL, NULL);
     }
 
-    app->screenWidth = 1080;
-    app->screenHeight = 620;
+    app->screenWidth = current.w / 1.6;
+    app->screenHeight = current.h / 1.6;
 
     if(SDL_CreateWindowAndRenderer(app->screenWidth, app->screenHeight, 0, &app->window, &app->renderer) != 0)
         SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL, NULL);
@@ -47,7 +46,6 @@ void appInit(App *app) {
     app->down = 0;
     app->left = 0;
     app->right = 0;
-    app->aiSetting = parseIniFileString("AI", app);
 }
 
 void SDL_Exit(App *app, Maze * maze, Entity *player, Entity *enemy) {

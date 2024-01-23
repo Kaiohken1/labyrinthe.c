@@ -1,21 +1,15 @@
 #include "database.h"
 #include <stdio.h>
 #include "draw.h"
-#include "structs.h"
-#include <string.h>
 
-void initDB(App *app) {
+void initDB() {
     sqlite3 *db;
     char *errMsg = 0;
     int rc;
 
     char fullPath[1024];
-    if (strcmp(app->aiSetting, "true") == 0)  {
-        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
-    } else {
-        getBasePath(fullPath, "maze.db", sizeof(fullPath));
-    }
-    
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
+
     rc = sqlite3_open(fullPath, &db);
     if (rc) {
         fprintf(stderr, "Impossible d'ouvrir la base de données: %s\n", sqlite3_errmsg(db));
@@ -33,18 +27,13 @@ void initDB(App *app) {
     sqlite3_close(db);
 }
 
-void insertScore(const char *name, double score, App *app) {
+void insertScore(const char *name, double score) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
 
     char fullPath[1024];
-    if (strcmp(app->aiSetting, "true") == 0)  {
-        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
-    } else {
-        getBasePath(fullPath, "maze.db", sizeof(fullPath));
-    }
-
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
 
     rc = sqlite3_open(fullPath, &db);
     if (rc != SQLITE_OK) {
@@ -131,12 +120,7 @@ void displayScores(App *app) {
     int rc;
 
     char fullPath[1024];
-    if (strcmp(app->aiSetting, "true") == 0)  {
-        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
-    } else {
-        getBasePath(fullPath, "maze.db", sizeof(fullPath));
-    }
-
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
     
     rc = sqlite3_open(fullPath, &db);
     if (rc) {
@@ -178,19 +162,14 @@ void displayScores(App *app) {
 
 
 void callDB(sqlite3 *db, App *app, double time, const char *name) {
-    initDB(app);
+    initDB();
     char fullPath[1024];
-    if (strcmp(app->aiSetting, "true") == 0)  {
-        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
-    } else {
-        getBasePath(fullPath, "maze.db", sizeof(fullPath));
-    }
-
+    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
 
     sqlite3_open(fullPath, &db);
 
     deleteScore(db, time);
-    insertScore(name, time, app);
+    insertScore(name, time);
     displayScores(app);
 
     sqlite3_close(db);
