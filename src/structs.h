@@ -13,6 +13,7 @@ typedef struct {
 	int right;
     int screenWidth;
     int screenHeight;
+    char *aiSetting;
 } App;
 
 typedef struct {

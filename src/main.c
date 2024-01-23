@@ -57,7 +57,9 @@ void runGame(App *app) {
         int prevX = player->x;
         int prevY = player->y;
 
-        loadAi(app, ai, endX, endY);
+        if (strcmp(app->aiSetting, "true") == 0) {
+            loadAi(app, ai, endX, endY);
+        }
 
         SDL_Texture *buffer = SDL_CreateTexture(app->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, app->screenWidth, app->screenHeight);
         if(buffer == NULL) {
@@ -105,6 +107,7 @@ void runGame(App *app) {
                 gameOver = TRUE;
                 break;
             }
+
 
             updateAiPosition(ai, player, maze);
             prepareScene(app);

@@ -4,8 +4,8 @@
 #include "structs.h"
 #include "init.h"
 
-void initDB();
-void insertScore(const char *name, double score);
+void initDB(App *app);
+void insertScore(const char *name, double score, App * app);
 int getScoreCount(sqlite3 *db);
 void deleteScore(sqlite3 *db, double newScore);
 static int callback(void *NotUsed, int argc, char **argv, char **azColName);

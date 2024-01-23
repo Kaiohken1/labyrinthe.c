@@ -1,6 +1,6 @@
 [GameSettings]
 NumberOfLevels = 2
 
-
-
+[GameDifficulty]
+AI = false
 
