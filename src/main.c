@@ -19,6 +19,7 @@ gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ima
 bin\prog.exe
 */
 
+
 void runGame(App *app) {
     int level = 1;
     List timeList = newList();
@@ -171,6 +172,75 @@ void runGame(App *app) {
     }
 }
 
+
+void drawButton(SDL_Renderer *renderer, TTF_Font *font, const char *text, SDL_Rect rect, SDL_Color bgColor, SDL_Color textColor) {
+    // Définir la couleur de fond du bouton
+    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+    
+    // Dessiner le rectangle du bouton
+    SDL_RenderFillRect(renderer, &rect);
+
+    // Calculez les coordonnées x et y pour centrer le texte dans le bouton
+    int textWidth, textHeight;
+    TTF_SizeText(font, text, &textWidth, &textHeight);
+    int textX = rect.x + (rect.w - textWidth) / 2;
+    int textY = rect.y + (rect.h - textHeight) / 2;
+
+    // Dessiner le texte du bouton
+    drawText(renderer, font, text, textX, textY, textColor);
+}
+
+
+
+int isMouseOverButton(int mouseX, int mouseY, SDL_Rect *rect) {
+
+    // Code pour vérifier si la souris est sur le bouton
+    return (mouseX > rect->x && mouseX < rect->x + rect->w &&
+            mouseY > rect->y && mouseY < rect->y + rect->h);
+}
+
+
+void showMainMenu(App *app) {
+    int menuRunning = 1;
+    SDL_Rect startButton = {100, 50, 200, 50}; // x, y, width, height
+    SDL_Rect optionsButton = {100, 150, 200, 50};
+    SDL_Rect quitButton = {100, 250, 200, 50};
+
+    while (menuRunning) {
+        prepareScene(app);
+
+        // Dessiner les boutons ici
+        drawButton(app, "Démarrer le jeu", &startButton);
+        drawButton(app, "Options", &optionsButton);
+        drawButton(app, "Quitter", &quitButton);
+
+        presentScene(app);
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    menuRunning = 0;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        int mouseX = event.button.x;
+                        int mouseY = event.button.y;
+                        if (isMouseOverButton(mouseX, mouseY, &startButton)) {
+                            runGame(app);
+                        } else if (isMouseOverButton(mouseX, mouseY, &optionsButton)) {
+                            // Options
+                        } else if (isMouseOverButton(mouseX, mouseY, &quitButton)) {
+                            menuRunning = 0;
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+
 int main(int argc, char **argv) {
     App *app = initSDL();
 
@@ -180,7 +250,7 @@ int main(int argc, char **argv) {
 
     srand(time(NULL)); 
     
-    runGame(app);
+    showMainMenu(app);
 
     SDL_Exit(app, NULL, NULL, NULL);
 
