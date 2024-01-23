@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include "ini.h"
 
 void createGrid(Maze *maze, App *app) {
     maze->width = app->screenWidth / CELL_SIZE;
@@ -244,7 +245,27 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    SDL_Texture *texture = loadTexture("img/stone.jpg", app);
+    
+    
+  char *mazeApparence = parseIniFileString("mazeApparence", app);
+char *wall = NULL;  // Initialisation à NULL
+
+if (mazeApparence != NULL) {
+    if (strcmp(mazeApparence, "classic") == 0) {
+        wall = parseIniFileString("stone", app);
+    } else if (strcmp(mazeApparence, "alt") == 0) {
+        wall = parseIniFileString("wood", app);
+    }
+}
+
+// Ici, utilisez directement wall, qui est déjà un pointeur
+SDL_Texture *texture = loadTexture(wall, app);
+
+
+
+    
+    
+    
     if(texture == NULL) {
         SDL_ExitWithError("Impossible de charger la texture du labyrinthe", app, maze, NULL, NULL);
     }

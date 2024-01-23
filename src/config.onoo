@@ -1,5 +1,12 @@
 [GameSettings]
 NumberOfLevels = 2
+mazeApparence = alt
+wood = img/wood.jpg
+stone = img/stone.jpg
+
+
+
+
 
 
 
