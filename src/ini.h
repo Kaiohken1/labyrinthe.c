@@ -2,7 +2,7 @@
 #define INI_H
 
 
-int parseIniFileint(char *filename, char *key);
+int parseIniFileint(char *key, App *app);
 
-char* parseIniFileString(char *filename, char *key);
+char* parseIniFileString(char *key, App *app);
 #endif 

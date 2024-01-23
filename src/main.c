@@ -15,8 +15,7 @@
 
 /*
 Compilation du programme :
-gcc src/*.c -o bin/monjeu -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
-
+gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 bin\prog.exe
 */
 void runGame(App *app) {
@@ -24,7 +23,12 @@ void runGame(App *app) {
     List timeList = newList();
     Bool gameOver = FALSE;
     time_t startTime, endTime;
-int NumberOfLevels = parseIniFileint("src/config.onoo","NumberOfLevels");
+    int NumberOfLevels = parseIniFileint("NumberOfLevels", app);
+
+    if(NumberOfLevels < 1) {
+        SDL_ExitWithError("Aucun niveau chargé, veuillez initialiser la valeur à 1 minimum", app, NULL, NULL, NULL);
+    }
+
     while (level <= NumberOfLevels && gameOver == FALSE) {
         Maze *maze = malloc(sizeof(Maze));
         Entity *player = malloc(sizeof(Entity));
