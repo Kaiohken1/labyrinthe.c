@@ -47,8 +47,8 @@ void runGame(App *app) {
 
         int startX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
         int startY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
-        int endX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + (MAZE_WIDTH - 1) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
-        int endY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + (MAZE_HEIGHT - 2) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int endX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + (maze->width - 1) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int endY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + (maze->height - 2) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
 
         player->x = startX;
         player->y = startY;
@@ -116,7 +116,7 @@ void runGame(App *app) {
             doInput(app);
 
 
-            if (player->x < 0 || player->x > MAZE_WIDTH * CELL_SIZE || player->y < 0 || player->y > MAZE_HEIGHT * CELL_SIZE) {
+            if (player->x < 0 || player->x > maze->width * CELL_SIZE|| player->y < 0 || player->y > maze->height * CELL_SIZE) {
                 levelCompleted = TRUE; 
             }
 

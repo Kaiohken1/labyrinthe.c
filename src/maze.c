@@ -7,8 +7,8 @@
 #include <time.h>
 
 void createGrid(Maze *maze) {
-    maze->width = MAZE_WIDTH;
-    maze->height = MAZE_HEIGHT; 
+    maze->width = SCREEN_WIDTH / CELL_SIZE;
+    maze->height = SCREEN_HEIGHT / CELL_SIZE;
     maze->tab = malloc(maze->width * sizeof(Cell*));
 
     if (maze->tab == NULL) {

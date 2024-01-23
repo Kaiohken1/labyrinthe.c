@@ -38,7 +38,7 @@ void updateAiPosition(Entity *enemy, Entity *player, Maze *maze) {
         int aiX = enemy->x + dx;
         int aiY = enemy->y + dy;
 
-        if (aiX >= 0 && aiX < MAZE_WIDTH * CELL_SIZE && aiY >= 0 && aiY < MAZE_HEIGHT * CELL_SIZE && !checkCollision(maze, enemy, aiX, aiY)) {
+        if (aiX >= 0 && aiX < maze->width * CELL_SIZE && aiY >= 0 && aiY < maze->height * CELL_SIZE && !checkCollision(maze, enemy, aiX, aiY)) {
             enemy->x = aiX;
             enemy->y = aiY;
         }
