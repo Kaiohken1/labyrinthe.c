@@ -18,6 +18,7 @@ Compilation du programme :
 gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 bin\prog.exe
 */
+
 void runGame(App *app) {
     int level = 1;
     List timeList = newList();
@@ -40,15 +41,15 @@ void runGame(App *app) {
 
         appInit(app);
 
-        generateMaze(maze);
+        generateMaze(maze, app);
         player->texture = loadTexture("img/full.png", app);
 
         int characterSize = 25; 
 
-        int startX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
-        int startY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
-        int endX = (SCREEN_WIDTH - (maze->width * CELL_SIZE)) / 2 + (maze->width - 1) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
-        int endY = (SCREEN_HEIGHT - (maze->height * CELL_SIZE)) / 2 + (maze->height - 2) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int startX = (app->screenWidth - (maze->width * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int startY = (app->screenHeight - (maze->height * CELL_SIZE)) / 2 + CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int endX = (app->screenWidth - (maze->width * CELL_SIZE)) / 2 + (maze->width - 1) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
+        int endY = (app->screenHeight - (maze->height * CELL_SIZE)) / 2 + (maze->height - 2) * CELL_SIZE + (CELL_SIZE / 2) - (characterSize / 2);
 
         player->x = startX;
         player->y = startY;
@@ -58,7 +59,7 @@ void runGame(App *app) {
 
         loadAi(app, ai, endX, endY);
 
-        SDL_Texture *buffer = SDL_CreateTexture(app->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+        SDL_Texture *buffer = SDL_CreateTexture(app->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, app->screenWidth, app->screenHeight);
         if(buffer == NULL) {
             SDL_ExitWithError("Erreur lors de la création du buffer", app, maze, player, ai);
         }

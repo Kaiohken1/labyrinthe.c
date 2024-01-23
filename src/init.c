@@ -5,6 +5,8 @@
 #include "maze.h"
 #include <SDL_ttf.h>
 
+
+
 App *initSDL() {
     App *app = malloc(sizeof(App));
 
@@ -15,7 +17,15 @@ App *initSDL() {
     if(SDL_Init(SDL_INIT_VIDEO) !=0)
         SDL_ExitWithError("Initialisation de SDL", app, NULL, NULL, NULL);
 
-    if(SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &app->window, &app->renderer) != 0)
+    SDL_DisplayMode current;
+    if (SDL_GetCurrentDisplayMode(0, &current) != 0) {
+        SDL_ExitWithError("Impossible d'obtenir la résolution de l'écran", app, NULL, NULL, NULL);
+    }
+
+    app->screenWidth = current.w / 1.6;
+    app->screenHeight = current.h / 1.6;
+
+    if(SDL_CreateWindowAndRenderer(app->screenWidth, app->screenHeight, 0, &app->window, &app->renderer) != 0)
         SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL, NULL);
 
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;

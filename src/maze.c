@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <time.h>
 
-void createGrid(Maze *maze) {
-    maze->width = SCREEN_WIDTH / CELL_SIZE;
-    maze->height = SCREEN_HEIGHT / CELL_SIZE;
+void createGrid(Maze *maze, App *app) {
+    maze->width = app->screenWidth / CELL_SIZE;
+    maze->height = app->screenHeight / CELL_SIZE;
     maze->tab = malloc(maze->width * sizeof(Cell*));
 
     if (maze->tab == NULL) {
@@ -130,8 +130,8 @@ void createExit(Maze *maze) {
     }
 }
 
-void generateMaze(Maze *maze) {
-    createGrid(maze);
+void generateMaze(Maze *maze, App *app) {
+    createGrid(maze, app);
     Cell cursor = {1, 1};
     deleteWall(maze, &cursor, 0, 0);
 
@@ -238,8 +238,8 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
         return;
     }
 
-    int centerX = (SCREEN_WIDTH / 2) - (maze->width * CELL_SIZE) / 2;
-    int centerY = (SCREEN_HEIGHT / 2) - (maze->height * CELL_SIZE) / 2;
+    int centerX = (app->screenWidth / 2) - (maze->width * CELL_SIZE) / 2;
+    int centerY = (app->screenHeight / 2) - (maze->height * CELL_SIZE) / 2;
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);

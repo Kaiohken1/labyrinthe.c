@@ -11,6 +11,8 @@ typedef struct {
 	int down;
 	int left;
 	int right;
+    int screenWidth;
+    int screenHeight;
 } App;
 
 typedef struct {

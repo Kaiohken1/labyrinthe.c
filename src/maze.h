@@ -2,11 +2,11 @@
 #define __MAZE__
 #include "structs.h"
 
-void createGrid(Maze *maze);
+void createGrid(Maze *maze, App *app);
 Bool canDelete(Maze *maze, Cell *cell, int dx, int dy);
 void deleteWall(Maze *maze, Cell *cell, int dx, int dy);
 void moveCursor(Cell *taupe, int dx, int dy);
-void generateMaze(Maze *maze);
+void generateMaze(Maze *maze, App *app);
 void initStack(Stack *stack, int capacity);
 Bool isStackEmpty(Stack *stack);
 Bool isStackFull(Stack *stack);
