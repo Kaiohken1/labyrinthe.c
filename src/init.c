@@ -22,8 +22,8 @@ App *initSDL() {
         SDL_ExitWithError("Impossible d'obtenir la résolution de l'écran", app, NULL, NULL, NULL);
     }
 
-    app->screenWidth = current.w / 1.6;
-    app->screenHeight = current.h / 1.6;
+    app->screenWidth = 1080;
+    app->screenHeight = 620;
 
     if(SDL_CreateWindowAndRenderer(app->screenWidth, app->screenHeight, 0, &app->window, &app->renderer) != 0)
         SDL_ExitWithError("Impossible de creer la fenetre et le rendu", app, NULL, NULL, NULL);
