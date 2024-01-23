@@ -25,6 +25,11 @@ void runGame(App *app) {
     Bool gameOver = FALSE;
     time_t startTime, endTime;
     int NumberOfLevels = parseIniFileint("NumberOfLevels", app);
+    app->ai = parseIniFileString("AI", app);
+    Bool isEnabled = FALSE;
+    if(strcmp(app->ai, "true") == 0) {
+        isEnabled = TRUE;
+    }
 
     if(NumberOfLevels < 1) {
         SDL_ExitWithError("Aucun niveau chargé, veuillez initialiser la valeur à 1 minimum", app, NULL, NULL, NULL);
@@ -56,8 +61,9 @@ void runGame(App *app) {
 
         int prevX = player->x;
         int prevY = player->y;
-
-        loadAi(app, ai, endX, endY);
+        if(isEnabled) {
+            loadAi(app, ai, endX, endY);
+        }
 
         SDL_Texture *buffer = SDL_CreateTexture(app->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, app->screenWidth, app->screenHeight);
         if(buffer == NULL) {
@@ -101,17 +107,23 @@ void runGame(App *app) {
                 player->y = newY;
             }
 
-            if (player->x == ai->x && player->y == ai->y) {
+            if (player->x == ai->x && player->y == ai->y && isEnabled) {
                 gameOver = TRUE;
                 break;
             }
 
-            updateAiPosition(ai, player, maze);
+            if(isEnabled) {
+                updateAiPosition(ai, player, maze);
+            }
+
             prepareScene(app);
 
             SDL_RenderCopy(app->renderer, buffer, NULL, NULL);
             blit(player->texture, player->x, player->y, app);
-            blit(ai->texture, ai->x, ai->y, app);
+            
+            if(isEnabled) {
+                blit(ai->texture, ai->x, ai->y, app);
+            }
 
             presentScene(app);
             doInput(app);

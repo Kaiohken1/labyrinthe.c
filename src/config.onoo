@@ -3,7 +3,7 @@ NumberOfLevels = 2
 mazeApparence = classic
 wood = img/wood.jpg
 stone = img/stone.jpg
-
+AI = false
 
 
 

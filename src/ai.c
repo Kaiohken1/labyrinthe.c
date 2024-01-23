@@ -9,7 +9,7 @@ void loadAi(App *app, Entity *enemy, int startX, int startY) {
 
 void updateAiPosition(Entity *enemy, Entity *player, Maze *maze) {
     static int moveTimer = 0;
-    const int DELAY = 560;
+    const int DELAY = 1000;
 
     moveTimer++;
     if (moveTimer >= DELAY) {

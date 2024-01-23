@@ -4,6 +4,7 @@
 #include "def.h"
 #include "maze.h"
 #include <SDL_ttf.h>
+#include "ini.h"
 
 
 

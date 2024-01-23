@@ -2,13 +2,22 @@
 #include <stdio.h>
 #include "draw.h"
 
-void initDB() {
+void initDB(App *app) {
     sqlite3 *db;
     char *errMsg = 0;
     int rc;
+    Bool isEnabled = FALSE;
+    if(strcmp(app->ai, "true") == 0) {
+        isEnabled = TRUE;
+    }
 
     char fullPath[1024];
-    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
+
+    if(isEnabled) {
+        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
+    } else {
+        getBasePath(fullPath, "maze.db", sizeof(fullPath));
+    }
 
     rc = sqlite3_open(fullPath, &db);
     if (rc) {
@@ -27,13 +36,22 @@ void initDB() {
     sqlite3_close(db);
 }
 
-void insertScore(const char *name, double score) {
+void insertScore(const char *name, double score, App *app) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
+    Bool isEnabled = FALSE;
+    if(strcmp(app->ai, "true") == 0) {
+        isEnabled = TRUE;
+    }
 
     char fullPath[1024];
-    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
+
+    if(isEnabled) {
+        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
+    } else {
+        getBasePath(fullPath, "maze.db", sizeof(fullPath));
+    }
 
     rc = sqlite3_open(fullPath, &db);
     if (rc != SQLITE_OK) {
@@ -119,8 +137,18 @@ void displayScores(App *app) {
     char *errMsg = 0;
     int rc;
 
+    Bool isEnabled = FALSE;
+    if(strcmp(app->ai, "true") == 0) {
+        isEnabled = TRUE;
+    }
+
     char fullPath[1024];
-    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
+
+    if(isEnabled) {
+        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
+    } else {
+        getBasePath(fullPath, "maze.db", sizeof(fullPath));
+    }
     
     rc = sqlite3_open(fullPath, &db);
     if (rc) {
@@ -144,7 +172,11 @@ void displayScores(App *app) {
         sqlite3_free(errMsg);
     } else {
         prepareScene(app);
-        drawText(app, "Meilleurs scores", 100, 50);
+        if(isEnabled) {
+            drawText(app, "Meilleurs scores (IA Activee)", 100, 50);
+        } else {
+            drawText(app, "Meilleurs scores", 100, 50);
+        }
         int y = 100;
         for (int i = 0; i < data->count; i++) {
             drawText(app, data->lines[i], 100, y);
@@ -162,14 +194,22 @@ void displayScores(App *app) {
 
 
 void callDB(sqlite3 *db, App *app, double time, const char *name) {
-    initDB();
+    initDB(app);
+    Bool isEnabled = FALSE;
+    if(strcmp(app->ai, "true") == 0) {
+        isEnabled = TRUE;
+    }
     char fullPath[1024];
-    getBasePath(fullPath, "mazeBDD.db", sizeof(fullPath));
+    if(isEnabled) {
+        getBasePath(fullPath, "mazeWithAI.db", sizeof(fullPath));
+    } else {
+        getBasePath(fullPath, "maze.db", sizeof(fullPath));
+    }
 
     sqlite3_open(fullPath, &db);
 
     deleteScore(db, time);
-    insertScore(name, time);
+    insertScore(name, time, app);
     displayScores(app);
 
     sqlite3_close(db);
