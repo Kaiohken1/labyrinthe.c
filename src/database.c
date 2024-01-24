@@ -181,7 +181,7 @@ void displayScores(App *app) {
         int y = 100;
         for (int i = 0; i < data->count; i++) {
             double score;
-            char name[128];
+            char name[10];
             sscanf(data->lines[i], "#%*d %s ............ %lf secondes", name, &score); 
 
             score = round(score * 100) / 100;
