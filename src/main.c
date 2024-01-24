@@ -33,6 +33,8 @@ void runGame(App *app) {
 
     if(NumberOfLevels < 1) {
         SDL_ExitWithError("Aucun niveau chargé, veuillez initialiser la valeur à 1 minimum", app, NULL, NULL, NULL);
+    } else if(NumberOfLevels > 6) {
+        NumberOfLevels = 5;
     }
 
     while (level <= NumberOfLevels && gameOver == FALSE) {

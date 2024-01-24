@@ -248,23 +248,16 @@ void renderMaze(SDL_Renderer *renderer, Maze *maze, App *app) {
     
     
   char *mazeApparence = parseIniFileString("mazeApparence", app);
-char *wall = NULL;  // Initialisation à NULL
+  char *wall = NULL;  
 
-if (mazeApparence != NULL) {
-    if (strcmp(mazeApparence, "classic") == 0) {
-        wall = parseIniFileString("stone", app);
-    } else if (strcmp(mazeApparence, "alt") == 0) {
-        wall = parseIniFileString("wood", app);
+    if (mazeApparence != NULL) {
+        if (strcmp(mazeApparence, "classic") == 0) {
+            wall = parseIniFileString("classicSkin", app);
+        } else if (strcmp(mazeApparence, "alt") == 0) {
+            wall = parseIniFileString("altSkin", app);
+        }
     }
-}
-
-// Ici, utilisez directement wall, qui est déjà un pointeur
-SDL_Texture *texture = loadTexture(wall, app);
-
-
-
-    
-    
+    SDL_Texture *texture = loadTexture(wall, app);
     
     if(texture == NULL) {
         SDL_ExitWithError("Impossible de charger la texture du labyrinthe", app, maze, NULL, NULL);

@@ -9,7 +9,7 @@
 
 int parseIniFileint(char *key, App *app) {
     char fullPath[1024];
-    getBasePath(fullPath, "src/config.onoo", sizeof(fullPath));
+    getBasePath(fullPath, "bin/config.ini", sizeof(fullPath));
 
     FILE *file = fopen(fullPath, "r");
     if (file == NULL) {
@@ -43,7 +43,7 @@ int parseIniFileint(char *key, App *app) {
 
 char* parseIniFileString(char *key, App *app) {
     char fullPath[1024];
-    getBasePath(fullPath, "src/config.onoo", sizeof(fullPath));
+    getBasePath(fullPath, "bin/config.ini", sizeof(fullPath));
 
     FILE *file = fopen(fullPath, "r");
     if (file == NULL) {
