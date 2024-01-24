@@ -9,7 +9,6 @@
 #include "ini.h"
 #include <string.h>
 #include "config.h"
-
 #include "database.h"
 #include "ai.h"
 

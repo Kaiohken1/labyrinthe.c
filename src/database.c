@@ -1,6 +1,7 @@
 #include "database.h"
 #include <stdio.h>
 #include "draw.h"
+#include <math.h>
 
 void initDB(App *app) {
     sqlite3 *db;
@@ -179,7 +180,16 @@ void displayScores(App *app) {
         }
         int y = 100;
         for (int i = 0; i < data->count; i++) {
-            drawText(app, data->lines[i], 100, y);
+            double score;
+            char name[128];
+            sscanf(data->lines[i], "#%*d %s ............ %lf secondes", name, &score); 
+
+            score = round(score * 100) / 100;
+
+            char formattedLine[128];
+            sprintf(formattedLine, "#%d %s ............ %.2f secondes", i + 1, name, score);
+
+            drawText(app, formattedLine, 100, y);
             y += 30;
         }
 
