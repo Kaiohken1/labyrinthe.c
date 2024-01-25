@@ -12,12 +12,6 @@
 #include "database.h"
 #include "ai.h"
 
-/*
-Compilation du programme :
-gcc src/*.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
-bin\prog.exe
-*/
-
 void runGame(App *app) {
     int level = 1;
     List timeList = newList();
